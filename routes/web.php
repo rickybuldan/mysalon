@@ -31,6 +31,7 @@ Route::post('/ajax-createcustomer', [JsonDataController::class, 'createcustomer'
 
 Route::get('/', [IndexController::class, 'index'])->name('home');
 
+Route::get('/invoice', [AdminController::class, 'invoice'])->name('invoice');
 
 
 Route::middleware(['auth'])->group(function () {
@@ -39,6 +40,13 @@ Route::middleware(['auth'])->group(function () {
         //VIEW
         Route::get('/tracking', [AdminController::class, 'tracking'])->name('tracking');
         Route::get('/listbooking', [AdminController::class, 'listbooking'])->name('listbooking');
+        Route::get('/bookingsreport', [AdminController::class, 'bookingsreport'])->name('bookingsreport');
+        Route::get('/bookingbysearch', [AdminController::class, 'bookingbysearch'])->name('bookingbysearch');
+        Route::get('/services', [AdminController::class, 'services'])->name('services');
+        Route::get('/customers', [AdminController::class, 'customers'])->name('customers');
+        Route::get('/employees', [AdminController::class, 'employees'])->name('employees');
+        Route::get('/employeeservices', [AdminController::class, 'employeeservices'])->name('employeeservices');
+        Route::get('/booking', [AdminController::class, 'booking'])->name('booking');
         
 
         //dashboard
@@ -46,13 +54,40 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ajax-gettopservice', [JsonDataController::class, 'gettopservice'])->name('gettopservice');
         Route::get('/ajax-gettotaltable', [JsonDataController::class, 'gettotaltable'])->name('gettotaltable');
         Route::get('/ajax-getrecentbookings', [JsonDataController::class, 'getrecentbookings'])->name('getrecentbookings');
+
      
 
         // List Booking
         Route::get('/ajax-listbookings', [JsonDataController::class, 'getlistbookings'])->name('getlistbookings');
         Route::get('/ajax-getbookingtracking', [JsonDataController::class, 'getbookingtracking'])->name('getbookingtracking');
         Route::get('/ajax-detbooking', [JsonDataController::class, 'getdetbooking'])->name('getdetbooking');
+        Route::get('/ajax-getdetbookingproduct', [JsonDataController::class, 'getdetbookingproduct'])->name('getdetbookingproduct');
         Route::post('/ajax-updatepaidbooking', [JsonDataController::class, 'updatepaidbooking'])->name('updatepaidbooking');
+
+         // Employees
+        Route::get('/ajax-listemployees', [JsonDataController::class, 'getlistemployees'])->name('getlistemployees');
+        Route::post('/ajax-createemployee', [JsonDataController::class, 'createemployee'])->name('createemployee');
+        Route::post('/ajax-updateemployee', [JsonDataController::class, 'updateemployee'])->name('updateemployee');
+        Route::delete('/ajax-deleteemployee', [JsonDataController::class, 'deleteemployee'])->name('deleteemployee');
+        
+         // Employees Services
+        Route::get('/ajax-listemployeeservices', [JsonDataController::class, 'getlistemployeeservices'])->name('getlistemployeeservices');
+        Route::post('/ajax-createemployeeservice', [JsonDataController::class, 'createemployeeservice'])->name('createemployeeservice');
+        Route::post('/ajax-updateemployeeservice', [JsonDataController::class, 'updateemployeeservice'])->name('updateemployeeservice');
+        Route::delete('/ajax-deleteemployeeservice', [JsonDataController::class, 'deleteemployeeservice'])->name('deleteemployeeservice');
+
+        // Services
+        // Route::get('/ajax-listservices', [JsonDataController::class, 'getlistservices'])->name('getlistservices');
+        Route::get('/ajax-listservicecategories', [JsonDataController::class, 'getlistservicecategories'])->name('getlistservicecategories');
+        Route::post('/ajax-createservice', [JsonDataController::class, 'createservice'])->name('createservice');
+        Route::post('/ajax-updateservice', [JsonDataController::class, 'updateservice'])->name('updateservice');
+        Route::delete('/ajax-deleteservice', [JsonDataController::class, 'deleteservice'])->name('deleteservice');
+
+        // booking product
+        Route::post('/ajax-updatebookingproduct', [JsonDataController::class, 'updatebookingproduct'])->name('updatebookingproduct');
+
+        // Products
+        Route::get('/ajax-getlistproducts', [JsonDataController::class, 'getlistproducts'])->name('getlistproducts');
         
         //tracking
         Route::post('/ajax-updatestatusdetbooking', [JsonDataController::class, 'updatestatusdetbooking'])->name('updatestatusdetbooking');
@@ -79,11 +114,7 @@ Route::middleware(['auth'])->group(function () {
     
         // VIEW 
         Route::get('/users-manager', [AdminController::class, 'usersmanager'])->name('users-manager');
-        Route::get('/services', [AdminController::class, 'services'])->name('services');
-        Route::get('/customers', [AdminController::class, 'customers'])->name('customers');
-        Route::get('/employees', [AdminController::class, 'employees'])->name('employees');
-        Route::get('/employeeservices', [AdminController::class, 'employeeservices'])->name('employeeservices');
-        Route::get('/booking', [AdminController::class, 'booking'])->name('booking');
+
 
         
         // JSON DATA
@@ -95,30 +126,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/ajax-updateuser', [JsonDataController::class, 'updateuser'])->name('updateuser');
         Route::delete('/ajax-deleteuser', [JsonDataController::class, 'deleteuser'])->name('deleteuser');
 
-        // Services
-        // Route::get('/ajax-listservices', [JsonDataController::class, 'getlistservices'])->name('getlistservices');
-        Route::get('/ajax-listservicecategories', [JsonDataController::class, 'getlistservicecategories'])->name('getlistservicecategories');
-        Route::post('/ajax-createservice', [JsonDataController::class, 'createservice'])->name('createservice');
-        Route::post('/ajax-updateservice', [JsonDataController::class, 'updateservice'])->name('updateservice');
-        Route::delete('/ajax-deleteservice', [JsonDataController::class, 'deleteservice'])->name('deleteservice');
+
 
          // Customers
         Route::get('/ajax-listcustomers', [JsonDataController::class, 'getlistcustomers'])->name('getlistcustomers');
         Route::post('/ajax-updatecustomer', [JsonDataController::class, 'updatecustomer'])->name('updatecustomer');
         Route::delete('/ajax-deletecustomer', [JsonDataController::class, 'deletecustomer'])->name('deletecustomer');
 
-        // Employees
-        Route::get('/ajax-listemployees', [JsonDataController::class, 'getlistemployees'])->name('getlistemployees');
-        Route::post('/ajax-createemployee', [JsonDataController::class, 'createemployee'])->name('createemployee');
-        Route::post('/ajax-updateemployee', [JsonDataController::class, 'updateemployee'])->name('updateemployee');
-        Route::delete('/ajax-deleteemployee', [JsonDataController::class, 'deleteemployee'])->name('deleteemployee');
-
-        
-        // Employees Services
-        Route::get('/ajax-listemployeeservices', [JsonDataController::class, 'getlistemployeeservices'])->name('getlistemployeeservices');
-        Route::post('/ajax-createemployeeservice', [JsonDataController::class, 'createemployeeservice'])->name('createemployeeservice');
-        Route::post('/ajax-updateemployeeservice', [JsonDataController::class, 'updateemployeeservice'])->name('updateemployeeservice');
-        Route::delete('/ajax-deleteemployeeservice', [JsonDataController::class, 'deleteemployeeservice'])->name('deleteemployeeservice');
 
         
     });

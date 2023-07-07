@@ -13,10 +13,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- PAGE TITLE HERE -->
-    <title>MySalon</title>
+    <title>POINTCUT</title>
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="image/png" href="images/favicon.png">
 
+    
     <link href="{{ asset('template/admin/vendor/bootstrap-select/dist/css/bootstrap-select.min.css') }}"
         rel="stylesheet">
     <link href="{{ asset('template/admin/vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
@@ -31,6 +32,7 @@
     
     <link href="{{ asset('template/admin/vendor/pickadate/themes/default.css') }}" rel="stylesheet">
     <link href="{{ asset('template/admin/vendor/pickadate/themes/default.date.css') }}" rel="stylesheet">
+    <link href="{{ asset('template/admin/vendor/jquery-smartwizard/dist/css/smart_wizard.min.css') }}" rel="stylesheet">
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     

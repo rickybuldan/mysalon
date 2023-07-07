@@ -96,6 +96,21 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="mb-3 row" id="content-product-det">
+                                <div class="table-responsive">
+                                    <table id="table-det-product" class="datatables w-100">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Product Name</th>
+                                                <th>Qty</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                             <div id="content-paid">
                                 <div class="mb-3 row">
                                     <label class="col-sm-3 col-form-label"> Pay Amount</label>

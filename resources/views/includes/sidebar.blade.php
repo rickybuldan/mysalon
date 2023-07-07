@@ -71,7 +71,7 @@
             </li>
 
             <li class="menu-title">MASTER</li>
-            
+            @if (auth()->check() && (auth()->user()->roles->first()->role_name === 'Superadmin'))
             <li><a class="has-arrow " href="javascript:void(0);">
                     <div class="menu-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -146,6 +146,7 @@
                     </li>
                 </ul>
             </li>
+            @endif
             <li><a class="has-arrow " href="javascript:void(0);">
                 <div class="menu-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -197,7 +198,7 @@
                 </ul>
             </li>
             <li class="menu-title">REPORTS</li>
-            <li><a href="task.html" class="">
+            <li><a href="{{ route('bookingsreport') }}" class="">
                     <div class="menu-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">

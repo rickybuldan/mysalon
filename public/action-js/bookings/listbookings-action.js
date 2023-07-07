@@ -165,10 +165,19 @@ function getListData() {
             {
                 mRender: function (data, type, row) {
                     var $rowData = `<button type="button" class="btn btn-primary btn-icon-sm mx-2 detail-btn"><i class="bi bi-eye"></i></button>`;
+                    if (row.is_paid != 1 && row.status == 1) {
+                        $rowData += `<button type="button" class="btn btn-success btn-icon-sm mx-2 add-btn"><i class="bi bi-plus-square"></i></button>`;
+                    }
+
+                    if (row.is_paid == 1 && row.status == 1) {
+                        $rowData += `<button type="button" class="btn btn-info btn-icon-sm mx-2 invoice-btn"><i class="bi bi-receipt"></i></button>`;
+                    }
+
                     // var $rowData = `<button type="button" class="btn btn-primary btn-icon-sm mx-2 edit-btn"><i class="bi bi-pencil-square"></i></button>`;
                     // $rowData += `<button type="button" class="btn btn-danger btn-icon-sm delete-btn"><i class="bi bi-x-square"></i></button>`;
                     return $rowData;
                 },
+                width: "95px",
                 visible: true,
                 targets: 6,
                 className: "text-center",
@@ -192,10 +201,33 @@ function getListData() {
                     e.preventDefault();
                     var tr = $(this).closest("tr");
                     var rowData = dtpr.row(tr).data();
-                    if (dtprx) {
+                    if (dtprx || dtprx2) {
                         dtprx.destroy();
+                        dtprx2.destroy();
                     }
                     detaildata(rowData);
+                });
+            $(rows)
+                .find(".add-btn")
+                .on("click", function (e) {
+                    e.preventDefault();
+                    var tr = $(this).closest("tr");
+                    var rowData = dtpr.row(tr).data();
+                    // if (dtprx) {
+                    //     dtprx.destroy();
+                    // }
+                    adddata(rowData);
+                });
+            $(rows)
+                .find(".invoice-btn")
+                .on("click", function (e) {
+                    e.preventDefault();
+                    var tr = $(this).closest("tr");
+                    var rowData = dtpr.row(tr).data();
+                    // if (dtprx) {
+                    //     dtprx.destroy();
+                    // }
+                    loadinvoice(rowData);
                 });
             $(rows)
                 .find(".delete-btn")
@@ -211,6 +243,12 @@ function getListData() {
 let isObject = {};
 
 let dtprx = "";
+let dtprx2 = "";
+function adddata(rowData) {
+    console.log(rowData);
+    location.replace(baseUrl + "/bookingbysearch?id=" + rowData.id);
+}
+
 function detaildata(rowData) {
     if (rowData.status != 1) {
         $("#content-paid").remove();
@@ -238,7 +276,6 @@ function detaildata(rowData) {
                     }
                     $("#form-pay").html(el);
 
-                    $("#modal-data").modal("show");
                     return response.data;
                 } else {
                     return response;
@@ -288,6 +325,44 @@ function detaildata(rowData) {
             },
         ],
     });
+    dtprx2 = $("#table-det-product").DataTable({
+        ajax: {
+            url: baseUrl + "/ajax-getdetbookingproduct",
+            type: "GET",
+            data: { id: rowData.id },
+            dataSrc: function (response) {
+                if (response.code == 0) {
+                    console.log(response);
+                    return response.data;
+                } else {
+                    return response;
+                }
+            },
+            complete: function () {
+                // loaderPage(false);
+            },
+        },
+        language: {
+            oPaginate: {
+                sFirst: "First",
+                sLast: "Last",
+                sNext: ">",
+                sPrevious: "<",
+            },
+        },
+        columns: [
+            {
+                data: "id",
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+            },
+            { data: "name_product" },
+            { data: "quantity" },
+        ],
+        columnDefs: [],
+    });
+    $("#modal-data").modal("show");
 }
 
 $("#pay-btn").on("click", function (e) {
@@ -399,4 +474,8 @@ function payData() {
             );
         }
     });
+}
+
+function loadinvoice(rowData) {
+    location.replace(baseUrl + "/invoice?no-booking=" + rowData.no_booking);
 }

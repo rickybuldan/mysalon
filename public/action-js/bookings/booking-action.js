@@ -1,13 +1,17 @@
 var baseUrl = window.location.origin;
 var csrfToken = $('meta[name="csrf-token"]').attr("content");
 $(document).ready(function () {
-    $("#label_employee").hide();
-    // $("#book-btn").hide();
     loadServices();
+    loadProducts();
+    $("#label_employee").hide();
+    $("#add-service-btn").hide();
+    // $("#book-btn").hide();
+
     checkItem();
     $("#form-time").select2({
         placeholder: "choose a service",
     });
+
     let name_service = "";
     $("#form-service").on("change", function () {
         var selectedValue = $(this).val();
@@ -35,6 +39,9 @@ $(document).ready(function () {
 
         if (selectedValue0 && selectedValue1 && selectedValue2) {
             getEmployees();
+            $("#add-service-btn").show();
+        } else {
+            $("#add-service-btn").hide();
         }
         checkItem();
     });
@@ -45,6 +52,25 @@ $(document).ready(function () {
     });
 
     let c = 0;
+
+    // $("#form-product").on("change", function (e) {
+    //     data = $(this).val();
+
+    //     priceProduct = 0;
+    //     totalProduct = 0;
+
+    //     if (data.length > 0) {
+    //         for (let index = 0; index < data.length; index++) {
+    //             priceProduct += parseInt(countPrice(dataProduct, data[index]));
+    //         }
+    //         totalProduct = parseInt(priceProduct);
+    //     } else {
+    //         priceProduct = 0;
+    //         totalProduct = 0;
+    //     }
+    //     allPrice();
+    // });
+
     $("#add-service-btn").on("click", function (e) {
         e.preventDefault();
 
@@ -60,11 +86,16 @@ $(document).ready(function () {
 
         service = $("#form-service").val();
         employee = $("input:radio[name=radioemployee]:checked").val();
-        console.log(employee);
-        name_employee = $("#name-employee").text();
+        let priceService = 9;
+
+        priceService = countPrice(dataService, service);
+        totalService += priceService;
+
+        // console.log(employee);
+        name_employee = $("input:radio[name=radioemployee]:checked").data("id");
 
         stat = true;
-        console.log();
+
         if (employee == "Booked") {
             stat = false;
             sweetAlert(
@@ -118,14 +149,27 @@ $(document).ready(function () {
         }
 
         checkItem();
+        allPrice();
     });
+});
+
+let name_product = "";
+$("#form-product").on("change", function () {
+    var selectedValue = $(this).val();
+    var selectedOption = $(this).find("option:selected");
+    var selectedText = selectedOption.text();
+    name_product = selectedText;
 });
 
 let isObject = {};
 function itemToObj() {
     var data = {
+        customer_name: $("#form-name-customer").val(),
+        customer_email: $("#form-email-customer").val(),
+        customer_phone: $("#form-phone-customer").val(),
         booking_date: $("#form-item-date").val(),
         booking_details: [],
+        booking_products: [],
     };
 
     $(".dataitem").each(function () {
@@ -139,17 +183,73 @@ function itemToObj() {
 
         data.booking_details.push(bookingDetail);
     });
+    $(".dataitem2").each(function () {
+        var product = $(this).find(".itemidproduct").val();
+        var qty = $(this).find(".itemqty").val();
+
+        var bookingDetail = {
+            id_product: product,
+            qty: qty,
+        };
+
+        data.booking_products.push(bookingDetail);
+    });
+
     isObject = data;
+    console.log(isObject);
+}
+
+let totalService = 0;
+let totalProduct = 0;
+function countPrice(array, selected) {
+    for (let index = 0; index < array.length; index++) {
+        if (array[index].id == selected) {
+            price = array[index].price;
+        }
+    }
+    return price;
+}
+
+function allPrice() {
+    totalService = 0;
+    totalProduct = 0;
+    qty = $("#form-qty").val();
+    $(".itemidproduct").each(function () {
+        value = $(this).val();
+        priceProduct = countPrice(dataProduct, value);
+        totalProduct += parseInt(priceProduct);
+    });
+
+    $(".itemidservice").each(function () {
+        value = $(this).val();
+        priceService = countPrice(dataService, value);
+        totalService += priceService;
+    });
+
+    total = totalService + totalProduct * qty;
+    $("#total-price").text(total);
 }
 
 function removeItem(el) {
     $("#" + el).remove();
+
     checkItem();
+    allPrice();
 }
 
 function checkItem() {
     count = $("#item-book > tr").length;
+    count2 = $("#item-product > tr").length;
+    if (count2 > 0) {
+        // loadProducts();
+        $("#no-datapic2").hide();
+        $("#book-btn").show();
+    } else {
+        $("#no-datapic2").show();
+        $("#book-btn").hide();
+    }
     if (count > 0) {
+        // loadProducts();
         $("#no-datapic").hide();
         $("#book-btn").show();
         $("#min-date").prop("disabled", true);
@@ -246,7 +346,6 @@ function loadTime(selectedValue) {
 }
 
 function getFilteredData(selectedValue) {
-    console.log(selectedValue);
     var data = [
         { id: "9", text: "09:00" },
         { id: "10", text: "10:00" },
@@ -279,6 +378,8 @@ function getFilteredData(selectedValue) {
     return filteredData;
 }
 
+var dataService = [];
+var dataProduct = [];
 async function loadServices() {
     try {
         const response = await $.ajax({
@@ -291,23 +392,67 @@ async function loadServices() {
                 //     text: "Please wait...",
                 // });
             },
-        });
-        console.log(response);
-        const res = response.data.map(function (item) {
-            return {
-                id: item.id,
-                text: item.service_name,
-            };
+            complete: function () {},
         });
 
-        $("#form-service").select2({
-            data: res,
-            placeholder: "Please choose an option",
-            allowClear: true,
+        if (response.code == 0) {
+            dataService = response.data;
+            const res = response.data.map(function (item) {
+                return {
+                    id: item.id,
+                    text:
+                        item.service_name +
+                        " (duration " +
+                        item.duration +
+                        " minutes)",
+                };
+            });
+            $("#form-service").select2({
+                data: res,
+                placeholder: "Please choose an option",
+                allowClear: true,
 
-            // dropdownParent: $("#modal-data"),
+                // dropdownParent: $("#modal-data"),
+            });
+            $("#form-service").val(null).trigger("change");
+        }
+    } catch (error) {
+        // sweetAlert("Oops...", error.responseText, "error");
+    }
+}
+async function loadProducts() {
+    try {
+        const response = await $.ajax({
+            url: baseUrl + "/ajax-getlistproducts",
+            type: "GET",
+            dataType: "json",
+            beforeSend: function () {
+                // Swal.fire({
+                //     title: "Loading",
+                //     text: "Please wait...",
+                // });
+            },
+            complete: function () {},
         });
-        $("#form-service").val(null).trigger("change");
+
+        if (response.code == 0) {
+            dataProduct = response.data;
+            const res = response.data.map(function (item) {
+                return {
+                    id: item.id,
+                    text: item.name,
+                };
+            });
+
+            $("#form-product").select2({
+                data: res,
+                placeholder: "Please choose an option",
+                allowClear: true,
+
+                // dropdownParent: $("#modal-data"),
+            });
+            $("#form-product").val(null).trigger("change");
+        }
     } catch (error) {
         // sweetAlert("Oops...", error.responseText, "error");
     }
@@ -325,8 +470,19 @@ function getEmployees() {
         url: baseUrl + "/ajax-getemployeebyservice",
         method: "GET",
         data: { id_service: id, date: formattedDateTime },
+        beforeSend: function () {
+            Swal.fire({
+                title: "Loading",
+                text: "Please wait...",
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+        },
+        complete: function () {
+            Swal.close();
+        },
         success: function (response) {
-            console.log(response);
             res = response.data;
             var targetElement = $("#list_employee");
             var row = "";
@@ -347,7 +503,7 @@ function getEmployees() {
                         ` +
                     status +
                     `
-                            <input type="radio" name="radioemployee" value="${id}">
+                            <input type="radio" name="radioemployee" value="${id}" data-id="${employee.name}">
                             <img class="img-fluid" src="` +
                     baseUrl +
                     `/template/admin/images/product/1.jpg") }}" alt="">
@@ -381,3 +537,42 @@ function getEmployees() {
         },
     });
 }
+
+let d = 0;
+$("#add-product-btn").on("click", function (e) {
+    e.preventDefault();
+
+    d++;
+
+    product = $("#form-product").val();
+    qty = $("#form-qty").val();
+    let priceProduct = 9;
+
+    priceProduct = countPrice(dataProduct, product);
+    res = priceProduct * qty;
+    totalProduct += parseInt(res);
+    stat = true;
+
+    $(".itemidproduct").each(function () {
+        var value = $(this).val();
+        if (value == product) {
+            sweetAlert("Oops...", "product already exists.", "error");
+
+            stat = false;
+        }
+    });
+
+    if (stat) {
+        var el = `
+        <tr class="dataitem2" id="productdata${d}">
+          <td><input type="hidden" class="form-control itemidproduct form-item" value="${product}"><input type="text" class="form-control" readonly value="${name_product}"></td>
+          <td><input type="text" class="form-control itemqty" readonly value="${qty}"></td>
+          <td><button onclick="removeItem('productdata${d}')" class="btn btn-sm btn-danger"><i class="bi bi-x-square"></i></button></td>
+        </tr>
+      `;
+        $("#item-product").append(el);
+    }
+
+    checkItem();
+    allPrice();
+});

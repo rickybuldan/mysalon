@@ -80,7 +80,9 @@ function saveData() {
             // Handle response sukses
             if (response.code == 0) {
                 swal("Saved !", response.message, "success").then(function () {
-                    location.reload();
+                    location.replace(
+                        baseUrl + "/invoice?no-booking=" + response.data
+                    );
                 });
                 // Reset form
             } else {
