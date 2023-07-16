@@ -61,7 +61,7 @@ function saveData() {
     var csrfToken = $('meta[name="csrf-token"]').attr("content");
 
     $.ajax({
-        url: baseUrl + "/ajax-createbooking",
+        url: baseUrl + "/ajax-createbookingonline",
         type: "POST",
         data: JSON.stringify(data),
         dataType: "json",
@@ -193,7 +193,7 @@ async function loadServices() {
         const res = response.data.map(function (item) {
             return {
                 id: item.id,
-                text: item.service_name,
+                text: item.service_name + " Rp. " + item.price,
             };
         });
 
@@ -230,10 +230,10 @@ function getEmployees() {
             var status = "";
             res.forEach(function (employee) {
                 if (employee.status_booked == "Booked") {
-                    status = `<div class="text-center"><span class="badge badge-secondary mb-2">Booked</span></div>`;
+                    status = `<div class="text-center"><span class="badge badge-secondary bg-warning mb-2">Booked</span></div>`;
                     id = "Booked";
                 } else {
-                    status = `<div class="text-center"><span class="badge badge-success mb-2">Idle</span></div>`;
+                    status = `<div class="text-center"><span class="badge badge-success bg-success mb-2">Idle</span></div>`;
                     id = employee.id_employee;
                 }
                 row =

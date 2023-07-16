@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class JsonDataController extends Controller
 {
@@ -562,7 +563,7 @@ class JsonDataController extends Controller
             }
 
             DB::beginTransaction();
-            if($data->password){
+            if(isset($data->password)){
                 $password= Hash::make($data->password);
             }else{
                 $password=Hash::make('admin123');
@@ -616,8 +617,8 @@ class JsonDataController extends Controller
 
             $validator = Validator::make((array) $data, [
                 'name' => 'required',
-                'phone' => 'required|unique:customers',
-                'email' => 'required|unique:users',
+                // 'phone' => 'required|unique:customers',
+                // 'email' => 'required|unique:users',
             ]);
 
             if ($validator->fails()) {
@@ -1157,7 +1158,6 @@ class JsonDataController extends Controller
         }
     }
 
-
     
     public function getlistbookings(Request $request)
     {
@@ -1221,7 +1221,10 @@ class JsonDataController extends Controller
                     sv.service_name,
                     em.`name` AS employee_name,
                     sc.category_name,
-                    cs.`name` AS name_customer 
+                    cs.`name` AS name_customer,
+                    cs.phone,
+                    cs.email,
+                    cs.id AS id_customer
                 FROM
                     bookings bk
                     LEFT JOIN users us ON us.id = bk.id_customer
@@ -1375,7 +1378,6 @@ class JsonDataController extends Controller
             return response()->json($errorResponse, 500);
         }
     }
-
 
     // DASHBOARD
     public function gettopservice(Request $request)
@@ -1564,46 +1566,6 @@ class JsonDataController extends Controller
         }
     }
 
-    public function getlistproducts(Request $request)
-    {
-        try {
-            // Ambil data dari permintaan AJAX (misalnya, parameter POST atau GET)
-            // $data = $request->input('data');
-
-            $query = "
-                SELECT
-                    *
-                FROM
-                    products bk
-            ";
-            
-            
-
-            $data = DB::select($query);
-
-            // Contoh data yang dikirim sebagai respons JSON
-            $responseData = [
-                'code'=>0,
-                'status' => 'success',
-                'data' => $data,
-            ];
-
-            // Kembalikan data dalam format JSON
-            return response()->json($responseData);
-
-        } catch (\Exception $e) {
-            // Tangkap pengecualian dan tangani di sini
-            // Misalnya, tampilkan pesan error atau lakukan tindakan yang sesuai
-
-            // Contoh menampilkan pesan error
-            $errorResponse = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-
-            return response()->json($errorResponse, 500); // Kode status 500 untuk kesalahan server
-        }
-    }
     public function getdetbookingproduct(Request $request)
     {
         try {
@@ -1648,9 +1610,7 @@ class JsonDataController extends Controller
         }
     }
 
-    
-
-    public function updatebookingproduct(Request $request)
+    public function updatebookingproductservice(Request $request)
     {
         try {
             // Validasi input
@@ -1660,11 +1620,36 @@ class JsonDataController extends Controller
             // dd($data);
            
             $validator = Validator::make((array) $data, [
-                'id_booking' => 'required',
-                // 'id_customer' => 'required|exists:customers,id',
-                'booking_products' => 'required|array',
-                'booking_products.*.id_product' => 'required|exists:products,id',
-                'booking_products.*.qty'  => 'required'
+                'booking_date' => 'required',
+                
+                // 'id_customer' => 'exists:customers,id',
+                'booking_details' => 'required|array',
+                'booking_details.*.id_service' => 'required|exists:services,id',
+                'booking_details.*.id_employee' => [
+                    'required',
+                    'exists:employees,id',
+                    function ($attribute, $value, $fail) use ($data) {
+                        // Lakukan pemeriksaan khusus di sini
+                        // Contoh: Jika nilai id_employee sama dengan "booked", maka validasi gagal
+                        if ($value == "Booked") {
+                            $fail('The selected employee is already booked.');
+                        }
+                    }
+                ],
+                'booking_products.*.id_product' => 'exists:products,id',
+                'booking_products.*.qty' => [
+                    'integer',
+                    'gt:0',
+                    function ($attribute, $value, $fail) use ($data) {
+                        $productId = $data['booking_products'][$attribute]['id_product'];
+                        $product = Product::find($productId);
+                        $product->stock=$product->stock - $value;
+                        $product->save();
+                        if ($product && $product->stock - $value < 0) {
+                            $fail('The product stock is insufficient.');
+                        }
+                    }
+                ],
             ],);
               
 
@@ -1679,34 +1664,54 @@ class JsonDataController extends Controller
             DB::beginTransaction();
 
             $bookingProducts = $data['booking_products'];
+            $bookingDetails = $data['booking_details'];
+            $totalPricex = 0;
+            $totalPricey = 0;
 
             foreach ($bookingProducts as $bookingProduct) {
                 $idProduct = $bookingProduct['id_product'];
                 $quantity = $bookingProduct['qty'];
-            
+                $price = DB::table('products')
+                ->where('id', $idProduct)
+                ->value('price');
+    
+                $totalPricex += $price * $quantity;
                 BookingProduct::updateOrCreate(
                     ['id_booking' => $data['id_booking'], 'id_product' => $idProduct],
                     ['quantity' => $quantity]
                 );
             }
+
+            foreach ($bookingDetails as $bookingDetail) {
+                $idservice = $bookingDetail['id_service'];
+                $id_employee = $bookingDetail['id_employee'];
+                $price = DB::table('services')
+                ->where('id', $idservice)
+                ->value('price');
+                $totalPricey += $price * $quantity;
+                BookingDetail::updateOrCreate(
+                    ['id_booking' => $data['id_booking'], 'id_service' => $idservice],
+                    ['id_employee' => $id_employee, 'is_finish' => 0]
+                );
+            }
+            
+            $idServices = Arr::pluck($data['booking_details'], 'id_service');
+            
+            $totalDuration = DB::table('services')
+            ->whereIn('id', $idServices)
+            ->sum('duration');
+            
+            $totalHourDuration=($totalDuration/60);
+
+            $EstimateDuration = Carbon::createFromFormat('Y-m-d H:i:s', $data['booking_date'])
+            ->addHours($totalHourDuration)
+            ->format('Y-m-d H:i:s');
+
             
             $Booking = Booking::findOrFail($data['id_booking']);
             // hitung product
-            $totalPricex = 0;
-            if ($data['booking_products']) {
-                foreach ($data['booking_products'] as $bookingProduct) {
-                    $idProduct = $bookingProduct['id_product'];
-                    $quantity = $bookingProduct['qty'];
-            
-                    $price = DB::table('products')
-                        ->where('id', $idProduct)
-                        ->value('price');
-            
-                    $totalPricex += $price * $quantity;
-                }
-            }
-            
-            $Booking->total_price += $totalPricex;
+            $Booking->estimate_end = $EstimateDuration;
+            $Booking->total_price = $totalPricex + $totalPricey;
             $Booking->save();
     
             // Commit transaksi jika semua operasi berhasil
@@ -1732,7 +1737,7 @@ class JsonDataController extends Controller
         }
     }
 
-    public function createbooking(Request $request)
+    public function createbookingonline(Request $request)
     {
         try {
             // Validasi input
@@ -1743,11 +1748,13 @@ class JsonDataController extends Controller
             $user = User::findOrFail($userId);
             
             // Cari data pengguna (user) berdasarkan email
+            $type=1;
             $customer = Customer::where('email', $user->email)->first();
             if ($customer) {
                 $data ['customer_name']=$customer->name;
-                $data ['customer_phone']=$customer->phone+1;
-            
+                $data ['customer_phone']=$customer->phone;
+                $data ['customer_email']=$customer->email;
+                $type=2;
             }
            
             $validator = Validator::make((array) $data, [
@@ -1770,8 +1777,8 @@ class JsonDataController extends Controller
                 'booking_products.*.id_product' => 'exists:products,id',
                 // 'booking_products.*.qty' => '',
                 'customer_name' => 'required',
-                'customer_email' => 'email|unique:users,email',
-                'customer_phone' => 'required|unique:customers,phone',
+                // 'customer_email' => 'email|unique:users,email',
+                // 'customer_phone' => 'required|unique:customers,phone',
             ],);
               
 
@@ -1784,36 +1791,34 @@ class JsonDataController extends Controller
             }
           
             
-            DB::beginTransaction();
+            DB::beginTransaction(); 
+            $customer = Customer::updateOrCreate(
+                ['email' => $data['customer_email']],
+                [
+                    'name' => $data['customer_name'],
+                    'phone' => $data['customer_phone'],
+                    'email' => $data['customer_email'],
+                ]
+            );
 
-            if(!$customer){
-                $customer = new Customer;
-                $customer->name = $data['customer_name'];
-                $customer->phone = $data['customer_phone'];
-                $customer->email = $data['customer_email'];
-                $customer->save();
-        
-                // if($data['password']){
-                //     $password= Hash::make($data['password']);
-                // }else{
-                //     $password=Hash::make('admin123');
-                // }
-                $password=Hash::make('admin123');
-                // Buat pengguna (user) baru
-                if($data['customer_email']){
-                    $user = User::create([
+            $password = !empty($data['password']) ? Hash::make($data['password']) : Hash::make('admin123');
+            
+            if (!empty($data['customer_email'])) {
+                $user = User::updateOrCreate(
+                    ['email' => $data['customer_email']],
+                    [
                         'name' => $data['customer_name'],
-                        'email' => $data['customer_email'],
                         'password' => $password,
                         'id_role' => 50,
-                        'is_active' =>1,
-                        'is_deleted' =>0,
-                    ]);
-                }
+                        'is_active' => 1,
+                        'is_deleted' => 0,
+                    ]
+                );
+            
                 $userId = $user->id;
-            }else{
-
             }
+          
+            
             
             $bookingDate = Carbon::createFromFormat('Y-m-d H:i:s', $data['booking_date'])->format('Y-m-d H:i:s');
             $bookingNumber = Booking::generateNoBooking($bookingDate);
@@ -1824,6 +1829,215 @@ class JsonDataController extends Controller
             $Booking->id_customer = $userId;
             $Booking->id_service_category = 8; //non paket
             $Booking->status = 0;
+            $Booking->type = $type;
+            $Booking->discount = 0;
+          
+
+            // hitung price service
+            $idServices = Arr::pluck($data['booking_details'], 'id_service');
+            $totalPrice = DB::table('services')
+                ->whereIn('id', $idServices)
+                ->sum('price');
+            
+            $totalDuration = DB::table('services')
+            ->whereIn('id', $idServices)
+            ->sum('duration');
+            
+            $totalHourDuration=($totalDuration/60);
+
+            $EstimateDuration = Carbon::createFromFormat('Y-m-d H:i:s', $data['booking_date'])
+            ->addHours($totalHourDuration)
+            ->format('Y-m-d H:i:s');
+
+            // hitung product
+            // dd($data['booking_products']);
+            $totalPricex = 0;
+            if (!empty($data['booking_products'])) {
+                foreach ($data['booking_products'] as $bookingProduct) {
+                    $idProduct = $bookingProduct['id_product'];
+                    $quantity = $bookingProduct['qty'];
+            
+                    $price = DB::table('products')
+                        ->where('id', $idProduct)
+                        ->value('price');
+            
+                    $totalPricex += $price * $quantity;
+                }
+            }
+        
+            
+            $Booking->total_price = $totalPrice+$totalPricex;
+            $Booking->estimate_end = $EstimateDuration;
+            $Booking->save();
+
+
+            $bookingDetails = [];
+            foreach ($data['booking_details'] as $bookingDetail) {
+                $bookingDetails[] = new BookingDetail([
+                    'id_booking' => $Booking->id,
+                    'id_service' => $bookingDetail['id_service'],
+                    'id_employee' => $bookingDetail['id_employee'],
+                    'is_finish' => 0,
+                ]);
+            }
+            $Booking->bookingDetails()->saveMany($bookingDetails);
+
+            if(!empty($data['booking_products'])){
+                $bookingProducts = [];
+                foreach ($data['booking_products'] as $bookingProduct) {
+                    $bookingProducts[] = new BookingProduct([
+                        'id_booking' => $Booking->id,
+                        'id_product' => $bookingProduct['id_product'],
+                        'quantity' => $bookingProduct['qty'],
+                    ]);
+                }
+                $Booking->bookingProducts()->saveMany($bookingProducts );
+            }
+    
+            // Commit transaksi jika semua operasi berhasil
+            DB::commit();
+            
+            $responseData = [
+                'code' => 0,
+                'status' => 'success',
+                'message' => 'Booking created successfully.',
+                'data' => $bookingNumber,
+            ];
+
+            return response()->json($responseData);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $errorResponse = [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+
+            return response()->json($errorResponse, 500);
+        }
+    }
+
+    public function createbookingoffline(Request $request)
+    {
+        try {
+            // Validasi input
+            $user = Auth::user();
+            $userId = Auth::id();
+            $data = json_decode($request->getContent() , true);
+            // dd($data);
+            // $user = User::findOrFail($userId);
+            
+            // Cari data pengguna (user) berdasarkan email
+            if($data['type']==1){
+                $data['id_customer']="";
+                $validator = Validator::make((array) $data, [
+                    'booking_date' => 'required',
+                    
+                    // 'id_customer' => 'exists:customers,id',
+                    'booking_details' => 'required|array',
+                    'booking_details.*.id_service' => 'required|exists:services,id',
+                    'booking_details.*.id_employee' => [
+                        'required',
+                        'exists:employees,id',
+                        function ($attribute, $value, $fail) use ($data) {
+                            // Lakukan pemeriksaan khusus di sini
+                            // Contoh: Jika nilai id_employee sama dengan "booked", maka validasi gagal
+                            if ($value == "Booked") {
+                                $fail('The selected employee is already booked.');
+                            }
+                        }
+                    ],
+                    'booking_products.*.id_product' => 'exists:products,id',
+                    'booking_products.*.qty' => 'integer|gt:0',
+                    'customer_name' => 'required',
+                    'customer_email' => 'email|unique:users,email',
+                    'customer_phone' => 'required|unique:customers,phone',
+                ],);  
+
+            }else{
+                $data['customer_name']="";
+                // $data['customer_email']="";
+                $data['customer_phone']="";
+                $validator = Validator::make((array) $data, [
+                    'booking_date' => 'required',
+                    
+                    'id_customer' => 'required|exists:customers,id',
+                    'booking_details' => 'required|array',
+                    'booking_details.*.id_service' => 'required|exists:services,id',
+                    'booking_details.*.id_employee' => [
+                        'required',
+                        'exists:employees,id',
+                        function ($attribute, $value, $fail) use ($data) {
+                            // Lakukan pemeriksaan khusus di sini
+                            // Contoh: Jika nilai id_employee sama dengan "booked", maka validasi gagal
+                            if ($value == "Booked") {
+                                $fail('The selected employee is already booked.');
+                            }
+                        }
+                    ],
+                    'booking_products.*.id_product' => 'exists:products,id',
+                    'booking_products.*.qty' => 'integer|gt:0',
+                    // 'customer_name' => 'required',
+                    // 'customer_email' => 'email|unique:users,email',
+                    // 'customer_phone' => 'required|unique:customers,phone',
+                ],);  
+               
+                $getuser = User::where('email', $data['customer_email'])->first();
+                $userId = $getuser->id;
+            }
+
+
+            if ($validator->fails()) {
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => $validator->errors()->all(),
+                ];
+                return response()->json($errorResponse, 422); // Kode status 422 untuk validasi gagal
+            }
+          
+            
+            DB::beginTransaction(); 
+
+           
+
+            if (empty($data['id_customer'])) {
+                $customer = Customer::create(
+                    [
+                        'name' => $data['customer_name'],
+                        'phone' => $data['customer_phone'],
+                        'email' =>  !empty($data['customer_email']) ? $data['customer_email'] : Str::random(10).'@example.com',
+                        // 'email'=> !empty($data['customer_email']) ? $data['customer_email'] : ""
+                    ]
+                );
+            }
+           
+            if (!empty($customer->email)) {
+                $password = !empty($data['password']) ? Hash::make($data['password']) : Hash::make('admin123');
+                $user = User::create(
+                    [
+                        'name' => $data['customer_name'],
+                        'email'=> $customer->email,
+                        'password' => $password,
+                        'id_role' => 50,
+                        'is_active' => 1,
+                        'is_deleted' => 0,
+                    ]
+                );
+            
+                $userId = $user->id;
+            }
+          
+               
+            $bookingDate = Carbon::createFromFormat('Y-m-d H:i:s', $data['booking_date'])->format('Y-m-d H:i:s');
+            $bookingNumber = Booking::generateNoBooking($bookingDate);
+
+            $Booking = new Booking;
+            $Booking->booking_date = $bookingDate;
+            $Booking->no_booking = $bookingNumber;
+            $Booking->id_customer = $userId;
+            $Booking->id_service_category = 8; //non paket
+            $Booking->status = 0;
+            $Booking->type = 1;
             $Booking->discount = 0;
           
 
@@ -1895,7 +2109,7 @@ class JsonDataController extends Controller
                 'code' => 0,
                 'status' => 'success',
                 'message' => 'Booking created successfully.',
-                'data' => $Booking->no_booking,
+                'data' => $bookingNumber,
             ];
 
             return response()->json($responseData);
@@ -1908,6 +2122,188 @@ class JsonDataController extends Controller
             ];
 
             return response()->json($errorResponse, 500);
+        }
+    }
+
+
+    public function getlistproducts(Request $request)
+    {
+        try {
+            // Ambil data dari permintaan AJAX (misalnya, parameter POST atau GET)
+            // $data = $request->input('data');
+
+            $query = "
+                SELECT
+                    *
+                FROM
+                    products bk
+            ";
+            
+            
+
+            $data = DB::select($query);
+
+            // Contoh data yang dikirim sebagai respons JSON
+            $responseData = [
+                'code'=>0,
+                'status' => 'success',
+                'data' => $data,
+            ];
+
+            // Kembalikan data dalam format JSON
+            return response()->json($responseData);
+
+        } catch (\Exception $e) {
+            // Tangkap pengecualian dan tangani di sini
+            // Misalnya, tampilkan pesan error atau lakukan tindakan yang sesuai
+
+            // Contoh menampilkan pesan error
+            $errorResponse = [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+
+            return response()->json($errorResponse, 500); // Kode status 500 untuk kesalahan server
+        }
+    }
+
+    public function createproduct(Request $request)
+    {
+        try {
+            // Validasi input
+            $data = json_decode($request->getContent());
+
+            $validator = Validator::make((array) $data, [
+                'name' => 'required',
+                'price' => 'required|integer|gt:0',
+                'stock' => 'required|integer|gt:0',
+            ]);
+
+            if ($validator->fails()) {
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => $validator->errors()->all(),
+                ];
+                return response()->json($errorResponse, 422); // Kode status 422 untuk validasi gagal
+            }
+
+            $Product = new Product;
+            $Product->name = $data->name;
+            $Product->stock = $data->stock;
+            $Product->price = $data->price;
+            $Product->save();
+
+            $responseData = [
+                'code' => 0,
+                'status' => 'success',
+                'message' => 'Product created successfully.',
+                'data' => $data,
+            ];
+
+            return response()->json($responseData);
+
+        } catch (\Exception $e) {
+            $errorResponse = [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+
+            return response()->json($errorResponse, 500);
+        }
+    }
+
+    public function updateproduct(Request $request)
+    {
+        try {
+            // Validasi input
+            $data = json_decode($request->getContent());
+
+            $validator = Validator::make((array) $data, [
+                'name' => 'required',
+                'price' => 'required|integer|gt:0',
+                'stock' => 'required|integer|gt:0',
+            ]);
+
+            if ($validator->fails()) {
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => $validator->errors()->all(),
+                ];
+                return response()->json($errorResponse, 422); // Kode status 422 untuk validasi gagal
+            }
+
+            $Product = Product::find($data->id);
+
+            if (!$Product) {
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => 'Product not found.',
+                ];
+                return response()->json($errorResponse, 404); // Kode status 404 untuk data tidak ditemukan
+            }
+
+            // Update data user
+            $Product->name = $data->name;
+            $Product->stock = $data->stock;
+            $Product->price = $data->price;
+            $Product->save();
+
+            $responseData = [
+                'code' => 0,
+                'status' => 'success',
+                'message' => 'Product updated successfully.',
+                'data' => $data,
+            ];
+
+            // Kembalikan data dalam format JSON
+            return response()->json($responseData);
+
+        } catch (\Exception $e) {
+            $errorResponse = [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+
+            return response()->json($errorResponse, 500);
+        }
+    }
+
+    public function deleteproduct(Request $request)
+    {
+        try {
+            $data = json_decode($request->getContent());
+    
+            // Cari pengguna berdasarkan ID
+            $Product = Product::find($data->id);
+    
+            if (!$Product) {
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => 'Product not found.',
+                ];
+                return response()->json($errorResponse, 404); // Kode status 404 untuk data tidak ditemukan
+            }
+    
+            // Hapus pengguna
+            $Product->delete();
+    
+            $responseData = [
+                'code' => 0,
+                'status' => 'success',
+                'message' => 'Product deleted successfully.',
+                'data' => $data,
+            ];
+    
+            // Kembalikan data dalam format JSON
+            return response()->json($responseData);
+    
+        } catch (\Exception $e) {
+            $errorResponse = [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+    
+            return response()->json($errorResponse, 500); // Kode status 500 untuk kesalahan server
         }
     }
 

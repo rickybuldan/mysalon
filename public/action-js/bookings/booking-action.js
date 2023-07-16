@@ -3,13 +3,45 @@ var csrfToken = $('meta[name="csrf-token"]').attr("content");
 $(document).ready(function () {
     loadServices();
     loadProducts();
+    loadCustomers();
     $("#label_employee").hide();
     $("#add-service-btn").hide();
     // $("#book-btn").hide();
 
     checkItem();
+
     $("#form-time").select2({
         placeholder: "choose a service",
+    });
+
+    $("#form-customer").select2({
+        placeholder: "choose a customer",
+    });
+
+    $("#form-customer").on("change", function () {
+        var selectedValue = $(this).val();
+        // var selectedOption = $(this).find("option:selected");
+        // var selectedText = selectedOption.text();
+        // name_service = selectedText;
+        $("#form-phone-customer").val("");
+        $("#form-email-customer").val("");
+        $("#form-name-customer").val("");
+
+        $("#form-phone-customer").prop("readonly", false);
+        $("#form-email-customer").prop("readonly", false);
+        $("#form-name-customer").prop("readonly", false);
+
+        if (selectedValue) {
+            res = getCustomerById(dataCustomer, selectedValue);
+
+            $("#form-phone-customer").val(res.phone);
+            $("#form-email-customer").val(res.email);
+            $("#form-name-customer").val(res.name);
+
+            $("#form-phone-customer").prop("readonly", true);
+            $("#form-email-customer").prop("readonly", true);
+            $("#form-name-customer").prop("readonly", true);
+        }
     });
 
     let name_service = "";
@@ -52,24 +84,6 @@ $(document).ready(function () {
     });
 
     let c = 0;
-
-    // $("#form-product").on("change", function (e) {
-    //     data = $(this).val();
-
-    //     priceProduct = 0;
-    //     totalProduct = 0;
-
-    //     if (data.length > 0) {
-    //         for (let index = 0; index < data.length; index++) {
-    //             priceProduct += parseInt(countPrice(dataProduct, data[index]));
-    //         }
-    //         totalProduct = parseInt(priceProduct);
-    //     } else {
-    //         priceProduct = 0;
-    //         totalProduct = 0;
-    //     }
-    //     allPrice();
-    // });
 
     $("#add-service-btn").on("click", function (e) {
         e.preventDefault();
@@ -163,10 +177,16 @@ $("#form-product").on("change", function () {
 
 let isObject = {};
 function itemToObj() {
+    let type = 1;
+    if ($("#form-customer").val()) {
+        type = 2;
+    }
     var data = {
+        id_customer: $("#form-customer").val(),
         customer_name: $("#form-name-customer").val(),
         customer_email: $("#form-email-customer").val(),
         customer_phone: $("#form-phone-customer").val(),
+        type: type,
         booking_date: $("#form-item-date").val(),
         booking_details: [],
         booking_products: [],
@@ -210,21 +230,50 @@ function countPrice(array, selected) {
     return price;
 }
 
+function getCustomerById(array, selected) {
+    datax = {};
+    for (let index = 0; index < array.length; index++) {
+        if (array[index].id == selected) {
+            datax["name"] = array[index].name;
+            datax["email"] = array[index].email;
+            datax["phone"] = array[index].phone;
+        }
+    }
+    return datax;
+}
+
 function allPrice() {
     totalService = 0;
     totalProduct = 0;
-    qty = $("#form-qty").val();
-    $(".itemidproduct").each(function () {
-        value = $(this).val();
-        priceProduct = countPrice(dataProduct, value);
-        totalProduct += parseInt(priceProduct);
+
+    let qtyArray = [];
+    let productArray = [];
+
+    $(".itemqty").each(function () {
+        let value = $(this).val();
+        qtyArray.push(parseInt(value));
     });
+
+    $(".itemidproduct").each(function () {
+        let value = $(this).val();
+        let priceProduct = countPrice(dataProduct, value);
+        productArray.push(parseInt(priceProduct));
+    });
+
+    for (let i = 0; i < qtyArray.length; i++) {
+        totalProduct += qtyArray[i] * productArray[i];
+    }
 
     $(".itemidservice").each(function () {
         value = $(this).val();
         priceService = countPrice(dataService, value);
         totalService += priceService;
     });
+
+    let total = totalService + totalProduct;
+    // console.log(productArray, "product", qtyArray, "qty");
+
+    $("#total-price").text(total);
 
     total = totalService + totalProduct * qty;
     $("#total-price").text(total);
@@ -261,12 +310,13 @@ function checkItem() {
         $("#book-btn").hide();
     }
 }
+
 function saveData() {
     itemToObj();
     var csrfToken = $('meta[name="csrf-token"]').attr("content");
 
     $.ajax({
-        url: baseUrl + "/ajax-createbooking",
+        url: baseUrl + "/ajax-createbookingoffline",
         type: "POST",
         data: JSON.stringify(isObject),
         dataType: "json",
@@ -299,6 +349,7 @@ function saveData() {
         },
     });
 }
+
 function loadDate(selectedValue) {
     $("#min-date").empty();
     if (selectedValue) {
@@ -313,6 +364,7 @@ function loadDate(selectedValue) {
         $("#min-date").prop("disabled", true);
     }
 }
+
 function loadTime(selectedValue) {
     $("#form-time").empty();
     if (selectedValue) {
@@ -380,6 +432,7 @@ function getFilteredData(selectedValue) {
 
 var dataService = [];
 var dataProduct = [];
+var dataCustomer = [];
 async function loadServices() {
     try {
         const response = await $.ajax({
@@ -458,6 +511,45 @@ async function loadProducts() {
     }
 }
 
+async function loadCustomers() {
+    try {
+        const response = await $.ajax({
+            url: baseUrl + "/ajax-listcustomers",
+            type: "GET",
+            dataType: "json",
+            beforeSend: function () {
+                // Swal.fire({
+                //     title: "Loading",
+                //     text: "Please wait...",
+                // });
+            },
+            complete: function () {},
+        });
+
+        if (response.code == 0) {
+            dataCustomer = response.data;
+            const res = response.data.map(function (item) {
+                return {
+                    id: item.id,
+                    text: item.phone,
+                };
+            });
+
+            $("#form-customer").select2({
+                data: res,
+                placeholder: "Please choose an option",
+                allowClear: true,
+
+                // dropdownParent: $("#modal-data"),
+            });
+
+            $("#form-customer").val(null).trigger("change");
+        }
+    } catch (error) {
+        // sweetAlert("Oops...", error.responseText, "error");
+    }
+}
+
 function getEmployees() {
     id = $("#form-service").val();
     date = $("#min-date").val();
@@ -489,10 +581,10 @@ function getEmployees() {
             var status = "";
             res.forEach(function (employee) {
                 if (employee.status_booked == "Booked") {
-                    status = `<div class="text-center"><span class="badge badge-secondary mb-2">Booked</span></div>`;
+                    status = `<div class="text-center"><span class="badge badge-sm  badge-secondary mb-2">Booked</span></div>`;
                     id = "Booked";
                 } else {
-                    status = `<div class="text-center"><span class="badge badge-success mb-2">Idle</span></div>`;
+                    status = `<div class="text-center"><span class="badge badge-sm  badge-success mb-2">Idle</span></div>`;
                     id = employee.id_employee;
                 }
                 row =

@@ -38,4 +38,7 @@
 <script src="{{ asset('template/admin/js/custom.js') }}"></script>
 <script src="{{ asset('template/admin/js/deznav-init.js') }}"></script>
 <script src="{{ asset('template/admin/js/demo.js') }}"></script>
+
+{{-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="{{ asset('tabs/b.tabs.js') }}"></script> --}}
 {{-- <script src="{{ asset('template/admin/js/styleSwitcher.js') }}"></script> --}}

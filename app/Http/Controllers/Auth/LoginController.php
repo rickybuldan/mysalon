@@ -23,6 +23,13 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
+        // $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+
+        // $credentials = [
+        //     $field => $login,
+        //     'password' => $password
+        // ];
+
         if (Auth::attempt($credentials)) {
             if (Auth::attempt($credentials)) {
             

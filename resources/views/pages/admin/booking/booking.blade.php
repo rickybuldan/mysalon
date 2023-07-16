@@ -134,6 +134,12 @@
 			<div class="card-body ">
 				<div class="basic-form px-4">
 					<div class="mb-3">
+						<label class="col-sm-3 col-form-label">Customer By Phone</label>
+						<select id="form-customer">
+
+						</select>
+					</div>
+					<div class="mb-3">
 					
 						<label class="col-sm-3 col-form-label">Customer Name<span class="text-danger">*</span></label>
 						<input type="text" class="form-control" placeholder="Name" id="form-name-customer">

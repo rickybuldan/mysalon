@@ -32,6 +32,13 @@ class AdminController extends Controller
 
     }
 
+    public function products(Request $request){
+
+        $javascriptFile = asset('action-js/products/products-action.js');
+        return view('pages.admin.products.products')->with('javascriptFile', $javascriptFile);
+
+    }
+
     public function booking(Request $request){
 
         $javascriptFile = asset('action-js/bookings/booking-action.js');

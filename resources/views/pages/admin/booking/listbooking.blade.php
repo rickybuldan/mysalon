@@ -24,6 +24,7 @@
                                     <th>No Booking</th>
                                     <th>Customers Name</th>
                                     {{-- <th>Category (Package)</th> --}}
+                                    <th>Type Booking</th>
                                     <th>Status</th>
                                     <th>Payment Status</th>
                                     {{-- <th>Discount</th>

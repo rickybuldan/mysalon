@@ -17,6 +17,7 @@ class Booking extends Model
         'id_service_category',
         'status',
         'discount',
+        'type',
         'total_price',
     ];
     public static function generateNoBooking($paramDate)
@@ -24,18 +25,17 @@ class Booking extends Model
         $prefix = 'BR';
         $paramx=Carbon::createFromFormat('Y-m-d H:i:s', $paramDate)->format('dmY');
         $date=$paramx;
-        $lastBooking = Booking::latest()->first();
-    
+
+        $lastBooking = Booking::selectRaw("*, DATE_FORMAT(booking_date, '%d%m%Y') AS formatted_booking_date")
+        ->whereRaw("DATE_FORMAT(booking_date, '%d%m%Y') = ?", [Carbon::parse($paramDate)->format('dmY')])
+        ->orderBy('no_booking', 'desc')
+        ->first();
+     
         if ($lastBooking) {
-         
-            $lastDate = Carbon::createFromFormat('dmY', substr($lastBooking->no_booking, 3, 8));
-            if ($lastDate->format('dmY') == $paramx) {
                 $lastNumber = explode('/', $lastBooking->no_booking);
                 $lastSerial = (int)end($lastNumber);
                 $newSerial = $lastSerial + 1;
-            } else {
-                $newSerial = 1;
-            }
+          
         } else {
             $newSerial = 1;
         }

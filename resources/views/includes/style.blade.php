@@ -35,6 +35,7 @@
     <link href="{{ asset('template/admin/vendor/jquery-smartwizard/dist/css/smart_wizard.min.css') }}" rel="stylesheet">
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {{-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> --}}
     
 
 
