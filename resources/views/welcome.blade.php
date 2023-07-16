@@ -263,8 +263,8 @@
                         </div>
                         <div class="services__three-item-content">
                             <h4><a href="services-details.html">Trend Haircut</a></h4>
-                            <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p>
-                            <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a>
+                            {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
+                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
@@ -275,8 +275,8 @@
                         </div>
                         <div class="services__three-item-content">
                             <h4><a href="services-details.html">Hair Washing</a></h4>
-                            <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p>
-                            <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a>
+                            {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
+                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
@@ -287,8 +287,8 @@
                         </div>
                         <div class="services__three-item-content">
                             <h4><a href="services-details.html">Hair Coloring</a></h4>
-                            <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p>
-                            <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a>
+                            {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
+                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
@@ -299,8 +299,8 @@
                         </div>
                         <div class="services__three-item-content">
                             <h4><a href="services-details.html">Facial hair Trim</a></h4>
-                            <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p>
-                            <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a>
+                            {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
+                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
@@ -732,7 +732,7 @@
 						<h5>Services</h5>
                         <div class="footer__two-widget-menu">
                             <ul>
-                                <li><a href="services-details.html">Trend Haircut</a></li>
+                                <li><a href="services-details.html">Haircut</a></li>
                                 <li><a href="services-details.html">Hair Washing</a></li>
                                 <li><a href="services-details.html">Hair Coloring</a></li>
                                 <li><a href="services-details.html">Facial hair Trim</a></li>
