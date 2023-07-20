@@ -647,7 +647,7 @@ async function loadCustomers() {
 
 function getEmployees() {
     id = $("#form-service").val();
-    date = $("#min-date").val();
+    date = $("#form-item-date").val();
     time = $("#form-time").val();
     var combinedDateTime = date + " " + time;
     var formattedDateTime = moment(combinedDateTime, "DD/MM/YYYY HH:mm").format(

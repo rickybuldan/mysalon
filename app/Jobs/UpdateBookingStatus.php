@@ -37,23 +37,7 @@ class UpdateBookingStatus implements ShouldQueue
         $currentTime = Carbon::now();
         $newTime = $currentTime->addMinutes(30);
         $bookings = Booking::where('booking_date', '<=', $newTime)->where('status', 0)->get();
-        // $newTime = $currentTime;
-        // $bookings = Booking::where('booking_date', '<=', $newTime)
-        // ->where('status', 0)
-        // ->where('estimate_end', '<=', $newTime)
-        // ->get();
-
-   
-        // foreach ($bookings as $booking) {
-        //     $booking->status = 2;
-        //     $booking->save();
-        //     $bookingDetails = BookingDetail::where('id_booking', $booking->id)->get();
-
-        //     foreach ($bookingDetails as $bookingDetail) {
-        //         $bookingDetail->is_finish = 2;
-        //         $bookingDetail->save();
-        //     }
-        // }
+       
         foreach ($bookings as $booking) {
             $bookingDetails = BookingDetail::where('id_booking', $booking->id)->get();
             $isFinish = $bookingDetails->contains(function ($bookingDetail) {
@@ -64,11 +48,6 @@ class UpdateBookingStatus implements ShouldQueue
                 $booking->status = 2;
                 $booking->save();
             }
-    
-            // foreach ($bookingDetails as $bookingDetail) {
-            //     $bookingDetail->is_finish = 2;
-            //     $bookingDetail->save();
-            // }
         }
         // dd(Carbon::now());
     }

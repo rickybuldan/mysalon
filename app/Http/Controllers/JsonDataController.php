@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class JsonDataController extends Controller
 {
@@ -608,7 +610,6 @@ class JsonDataController extends Controller
         }
     }
 
-    
     public function updatecustomer(Request $request)
     {
         try {
@@ -730,7 +731,8 @@ class JsonDataController extends Controller
             $query = "
                 SELECT
                     sr.*,
-                    ur.role_name
+                    ur.role_name,
+                    us.id_role
                 FROM
                     employees sr
                 LEFT JOIN users us ON us.email = sr.email
@@ -774,8 +776,11 @@ class JsonDataController extends Controller
                 'name' => 'required',
                 'email' => 'required|email|unique:users',
                 'phone' => 'required|unique:employees',
-                'role_code'=>'required|exists:user_roles,role_code'
+                'role_code'=>'required|exists:user_roles,role_code',
+                // 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
+                'image' => 'string|image64:jpeg,png,jpg', // Validasi gambar Base64
             ]);
+            // dd($data);
 
             if ($validator->fails()) {
                 $errorResponse = [
@@ -785,15 +790,33 @@ class JsonDataController extends Controller
                 return response()->json($errorResponse, 422); // Kode status 422 untuk validasi gagal
             }
 
+
             DB::beginTransaction();
+            $imagePath = null;
+            $filename=null;
+            $imageData = $request->input('image');
+            if($imageData){
+                $image = Image::make($imageData);
+
+                // Nama file baru untuk gambar
+                $filename = Str::random(40) . '.jpg';
+
+                // Simpan gambar di folder 'public/images'
+                $imagePath = public_path('images/') . $filename;
+                $image->save($imagePath);
+            }
+
+                
 
             // Simpan data pelanggan (employee)
             $employee = new Employee;
             $employee->name = $data->name;
             $employee->phone = $data->phone;
             $employee->email = $data->email;
+            $employee->path = $filename; 
             $employee->save();
     
+ 
             // Buat pengguna (user) baru
             $user = User::create([
                 'name' => $data->name,
@@ -835,9 +858,10 @@ class JsonDataController extends Controller
             $data = json_decode($request->getContent());
 
             $validator = Validator::make((array) $data, [
-                'name' => 'required',
-                'phone' => 'required|unique:employees',
-                'email' => 'required|unique:users',
+                // 'name' => 'required',
+                // 'phone' => 'required|unique:employees',
+                // 'email' => 'required|unique:users',
+                // 'image' => 'nullable|mimes:jpeg,jpg,png|max:2048',
             ]);
 
             if ($validator->fails()) {
@@ -859,12 +883,33 @@ class JsonDataController extends Controller
             }
             
             DB::beginTransaction();
+    
+            // Delete the existing image if it exists
+            if ($Employee && $Employee->path) {
+                $existingImagePath = public_path('images/') . $Employee->path;
+                if (file_exists($existingImagePath)) {
+                    unlink($existingImagePath);
+                }
+            }
+            
+            $filename=null;
+            $imageData = $request->input('image');
+            if($imageData){
+                $image = Image::make($imageData);
 
+                // Nama file baru untuk gambar
+                $filename = Str::random(40) . '.jpg';
+
+                // Simpan gambar di folder 'public/images'
+                $imagePath = public_path('images/') . $filename;
+                $image->save($imagePath);
+            }
             // Cari data pelanggan (customer) berdasarkan ID
             $Employee = Employee::findOrFail($data->id);
             $Employee->name = $data->name;
             $Employee->phone = $data->phone;
             $Employee->email = $data->email;
+            $Employee->path = $filename;
             $Employee->save();
     
             // Cari data pengguna (user) berdasarkan email
@@ -906,6 +951,15 @@ class JsonDataController extends Controller
     
             // Cari pengguna berdasarkan ID
             $Employee = Employee::findOrFail($data->id);
+    
+            // Delete the existing image if it exists
+            if ($Employee && $Employee->path) {
+                $existingImagePath = public_path('images/') . $Employee->path;
+                if (file_exists($existingImagePath)) {
+                    unlink($existingImagePath);
+                }
+            }
+            $Employee->delete();
 
             // Hapus data pengguna (user) berdasarkan email
             $user = User::where('email', $Employee->email)->first();
@@ -914,7 +968,7 @@ class JsonDataController extends Controller
             }
     
             // Hapus data pelanggan (Employee)
-            $Employee->delete();
+        
 
             DB::commit();
     
@@ -1117,6 +1171,7 @@ class JsonDataController extends Controller
             SELECT
                 es.*,
                 ep.name,
+                ep.path,
                 CASE WHEN bd.id_employee IS NOT NULL THEN 'Booked' ELSE 'Idle' END AS status_booked
             
             FROM
@@ -1158,7 +1213,6 @@ class JsonDataController extends Controller
         }
     }
 
-    
     public function getlistbookings(Request $request)
     {
         try {
@@ -1643,8 +1697,6 @@ class JsonDataController extends Controller
                     function ($attribute, $value, $fail) use ($data) {
                         $productId = $data['booking_products'][$attribute]['id_product'];
                         $product = Product::find($productId);
-                        $product->stock=$product->stock - $value;
-                        $product->save();
                         if ($product && $product->stock - $value < 0) {
                             $fail('The product stock is insufficient.');
                         }
@@ -2089,9 +2141,22 @@ class JsonDataController extends Controller
                 ]);
             }
             $Booking->bookingDetails()->saveMany($bookingDetails);
-
+       
             if(!empty($data['booking_products'])){
                 $bookingProducts = [];
+                $product = Product::find($bookingProduct['id_product']);
+
+                // Mengurangi kuantitas produk
+                $stockres = $product->stock - $bookingProduct['qty'];
+
+                if ($stockres < 0) {
+                    // Tindakan jika stok habis
+                    throw new \Exception("The " . $product->name ."  product is out of stock.");
+                }
+                
+                $product->stock = $stockres;
+                $product->save();
+
                 foreach ($data['booking_products'] as $bookingProduct) {
                     $bookingProducts[] = new BookingProduct([
                         'id_booking' => $Booking->id,
@@ -2101,7 +2166,7 @@ class JsonDataController extends Controller
                 }
                 $Booking->bookingProducts()->saveMany($bookingProducts );
             }
-    
+
             // Commit transaksi jika semua operasi berhasil
             DB::commit();
             

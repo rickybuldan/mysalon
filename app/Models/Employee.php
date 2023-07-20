@@ -13,6 +13,7 @@ class Employee extends Model
         'name',
         'email',
         'phone',
+        'path',
     ];
     public function services()
     {

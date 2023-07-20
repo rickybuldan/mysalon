@@ -257,7 +257,7 @@ function detaildata(rowData) {
                 .on("click", function () {
                     var tr = $(this).closest("tr");
                     var rowData = dtprx.row(tr).data();
-                    saveData(rowData);
+                    saveData(rowData, dtprx);
                 });
         },
     });
@@ -279,7 +279,7 @@ $("#save-btn").on("click", function (e) {
     checkValidation();
 });
 
-function saveData(rowData) {
+function saveData(rowData, dtprx) {
     var csrfToken = $('meta[name="csrf-token"]').attr("content");
     $.ajax({
         url: baseUrl + "/ajax-updatestatusdetbooking",
@@ -301,7 +301,7 @@ function saveData(rowData) {
             // Handle response sukses
             if (response.code == 0) {
                 swal("Saved !", response.message, "success").then(function () {
-                    location.reload();
+                    dtprx.ajax.reload();
                 });
                 // Reset form
             } else {

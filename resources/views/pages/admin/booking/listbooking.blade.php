@@ -69,12 +69,12 @@
                                     <input id="form-no-booking" type="text" class="form-control" placeholder="Email" readonly>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
+                            {{-- <div class="mb-3 row">
                                 <label class="col-sm-3 col-form-label">Diskon</label>
                                 <div class="col-sm-9">
                                     <input id="form-discount" type="number" class="form-control" placeholder="Phone" readonly>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="mb-3 row">
                                 <label class="col-sm-3 col-form-label">Total Price</label>
                                 <div class="col-sm-9">

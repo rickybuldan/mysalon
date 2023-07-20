@@ -236,6 +236,11 @@ function getEmployees() {
                     status = `<div class="text-center"><span class="badge badge-success bg-success mb-2">Idle</span></div>`;
                     id = employee.id_employee;
                 }
+                if (employee.path) {
+                    path = baseUrl + "/images/" + employee.path;
+                } else {
+                    path = baseUrl + "/template/admin/images/product/1.jpg";
+                }
                 row =
                     `
                     <div class="col-xl-2 col-md-6 col-sm-6 mx-0">
@@ -244,16 +249,15 @@ function getEmployees() {
                         ` +
                     status +
                     `
-                            <input type="radio" name="radioemployee" value="${id}">
+                            <input type="radio" name="radioemployee" value="${id}" data-id="${employee.name}">
                             <img class="img-fluid" src="` +
-                    baseUrl +
-                    `/template/admin/images/product/1.jpg") }}" alt="">
-                            <p class="text-center">${employee.name}</p>
+                    path +
+                    `" alt="">
+                            <p id="name-employee" class="text-center">${employee.name}</p>
                         </label>
                         
                     </div>
                 `;
-
                 // Menambahkan baris ke elemen target
                 targetElement.append(row);
                 if (employee.status_booked == "Booked") {

@@ -587,6 +587,12 @@ function getEmployees() {
                     status = `<div class="text-center"><span class="badge badge-sm  badge-success mb-2">Idle</span></div>`;
                     id = employee.id_employee;
                 }
+
+                if (employee.path) {
+                    path = baseUrl + "/images/" + employee.path;
+                } else {
+                    path = baseUrl + "/template/admin/images/product/1.jpg";
+                }
                 row =
                     `
                     <div class="col-xl-2 col-md-6 col-sm-6 mx-0">
@@ -597,8 +603,8 @@ function getEmployees() {
                     `
                             <input type="radio" name="radioemployee" value="${id}" data-id="${employee.name}">
                             <img class="img-fluid" src="` +
-                    baseUrl +
-                    `/template/admin/images/product/1.jpg") }}" alt="">
+                    path +
+                    `" alt="">
                             <p id="name-employee" class="text-center">${employee.name}</p>
                         </label>
                         
@@ -658,7 +664,7 @@ $("#add-product-btn").on("click", function (e) {
         var el = `
         <tr class="dataitem2" id="productdata${d}">
           <td><input type="hidden" class="form-control itemidproduct form-item" value="${product}"><input type="text" class="form-control" readonly value="${name_product}"></td>
-          <td><input type="text" class="form-control itemqty" readonly value="${qty}"></td>
+          <td><input type="number" class="form-control itemqty" readonly value="${qty}"></td>
           <td><button onclick="removeItem('productdata${d}')" class="btn btn-sm btn-danger"><i class="bi bi-x-square"></i></button></td>
         </tr>
       `;

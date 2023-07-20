@@ -93,26 +93,21 @@
 							<div class="responsive-menu"></div>
 						</div>
 					</div>
-					{{-- <div class="header__area-menubar-right three">
+					<div class="header__area-menubar-right three">
 						<div class="header__area-menubar-right-menu menu-responsive">						
 							<ul id="mobilemenu">
-								<li class="menu-item-has-children"><a href="#">Home</a>
+								{{-- <li class="menu-item-has-children"><a href="#">Home</a>
 									<ul class="sub-menu">
 										<li><a href="index.html">Home 01</a></li>
 										<li><a href="index-2.html">Home 02</a></li>
 										<li><a href="index-3.html">Home 03</a></li>									
 									</ul>
-								</li>
-								<li class="menu-item-has-children"><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="about.html">About</a></li>
-										<li><a href="price.html">Price</a></li>
-										<li><a href="team.html">Team</a></li>
-										<li><a href="services.html">Services</a></li>
-										<li><a href="services-details.html">Services Details</a></li>
-									</ul>
-								</li>
-								<li class="menu-item-has-children"><a href="#">Shop</a>
+								</li> --}}
+								<li><a href="#for-booking">Booking</a></li>
+								<li><a href="#for-booking">Services</a></li>
+								<li><a href="#for-visi">Visi Misi</a></li>
+								
+								{{-- <li class="menu-item-has-children"><a href="#">Shop</a>
 									<ul class="sub-menu">
 										<li><a href="product-page.html">Product Page</a></li>
 										<li><a href="product-details.html">Product Details</a></li>
@@ -126,11 +121,11 @@
 										<li><a href="blog-standard.html">Blog Standard</a></li>
 										<li><a href="blog-details.html">Blog Details</a></li>
 									</ul>
-								</li>
-								<li><a href="contact.html">Contact</a></li>
+								</li> --}}
+								<li><a href="#for-contact">Contact</a></li>
 							</ul>
 						</div>
-					</div> --}}
+					</div>
 					<div class="header__area-menubar-right-box">
 						{{-- <div class="header__area-menubar-right-box-search">
 							<div class="search">	
@@ -259,48 +254,48 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 xl-mb-30">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
-                            <img src="assets/img/icon/services-1.png" alt="">
+                            <img src="{{asset('template/landing/assets/img/icon/services-1.png')}}" alt="">
                         </div>
                         <div class="services__three-item-content">
-                            <h4><a href="services-details.html">Trend Haircut</a></h4>
+                            <h4><a href="#" class="services">Trend Haircut</a></h4>
                             {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
-                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
+                            {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 md-mb-30">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
-                            <img src="assets/img/icon/services-2.png" alt="">
+                            <img src="{{asset('template/landing/assets/img/icon/services-2.png')}}" alt="">
                         </div>
                         <div class="services__three-item-content">
-                            <h4><a href="services-details.html">Hair Washing</a></h4>
+                            <h4><a href="#">Hair Washing</a></h4>
                             {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
-                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
+                            {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 md-mb-30">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
-                            <img src="assets/img/icon/services-3.png" alt="">
+                            <img src="{{asset('template/landing/assets/img/icon/services-3.png')}}" alt="">
                         </div>
                         <div class="services__three-item-content">
-                            <h4><a href="services-details.html">Hair Coloring</a></h4>
+                            <h4><a href="#">Hair Coloring</a></h4>
                             {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
-                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
+                            {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
-                            <img src="assets/img/icon/services-4.png" alt="">
+                            <img src="{{asset('template/landing/assets/img/icon/services-4.png')}}" alt="">
                         </div>
                         <div class="services__three-item-content">
-                            <h4><a href="services-details.html">Facial hair Trim</a></h4>
+                            <h4><a href="#">Facial hair Trim</a></h4>
                             {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
-                            {{-- <a href="services-details.html" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
+                            {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
@@ -463,14 +458,14 @@
 	<!-- Gallery Area End -->
 	{{-- <img class="img__full" src="assets/img/features/bg.jpg" alt=""> --}}
 	<!-- FAQ Area Start -->
-	{{-- <div class="faq__area section-padding">
+	<div class="faq__area section-padding" id="for-visi" >
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-xl-5 col-lg-6 lg-mb-30">
 					<div class="faq__area-title">
-						<span class="subtitle__two">FAQ</span>
-						<span class="subtitle__one">Salon FAQ</span>
-						<h2>Haircut Salon FAQ</h2>
+						<span class="subtitle__two">Visi Misi</span>
+						<span class="subtitle__one">POINTCUT</span>
+						<h2>Visi Misi</h2>
 						<p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros accumsan tincidunt maximus eget lectus. Nullam sed ipsum mauris. Nam a nisl et lacus pretium porttitor.</p>						
 						<div class="faq__area-title-shape">
 							<img src="assets/img/shape/faq.png" alt="">
@@ -537,7 +532,7 @@
 				</div>
 			</div>
 		</div>
-	</div> --}}
+	</div>
 	<!-- FAQ Area End -->	
 	<!-- Instagram Area Start -->	
 	{{-- <div class="instagram__area two">
@@ -713,21 +708,21 @@
     <div class="row"><div id="map" style="height: 350px; width:100%; border-radius:12px"></div></div>
 	<!-- Newsletter Area End -->
 	<!-- Footer Two Start -->	
-	<div class="footer__two">
+	<div id="for-contact" class="footer__two">
 		<div class="footer__area-shape">
 			<img src="assets/img/shape/foorer.png" alt="">
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="col-xl-3 col-lg-3 col-md-4 col-sm-8 sm-mb-30">
+				<div class="col-xl-4 col-lg-3 col-md-4 col-sm-8 sm-mb-30">
 					<div class="footer__two-widget">
 						<div class="footer__two-widget-logo">
 							<a href="index.html"><img src="assets/img/logo.png" alt=""></a>								
 						</div>
-                        <p>Phasellus vitae purus ac urna consequat facilisis a vel leo.</p>
+                        <h5 class="mt-5">POINTCUT</h5>
 					</div>
 				</div>
-				<div class="col-xl-3 col-lg-2 col-md-3 col-sm-4 lg-mb-30">
+				{{-- <div class="col-xl-3 col-lg-2 col-md-3 col-sm-4 lg-mb-30">
 					<div class="footer__two-widget pl-25 xl-pl-0">
 						<h5>Services</h5>
                         <div class="footer__two-widget-menu">
@@ -739,8 +734,8 @@
                             </ul>
                         </div>
 					</div>
-				</div>
-				<div class="col-xl-3 col-lg-4 col-md-5 col-sm-6 sm-mb-30">
+				</div> --}}
+				<div class="col-xl-4 col-lg-4 col-md-5 col-sm-6 sm-mb-30">
 					<div class="footer__two-widget pl-10">
 						<h5>Contact Us</h5>
 						<div class="footer__two-widget-contact">
@@ -771,7 +766,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">
+				<div class="col-xl-4 col-lg-3 col-md-5 col-sm-6">
 					<div class="footer__two-widget last">
 						<h5>Follow Us</h5>
 						<div class="footer__two-widget-follow">
@@ -790,9 +785,9 @@
 			<div class="container">
 				<div class="row align-items-center">
 					<div class="col-xl-12">
-						<div class="copyright__two-center">
+						{{-- <div class="copyright__two-center">
 							<p>Copyright © 2022<a href="index.html"> ThemeOri</a> Website by Barbex</p>
-						</div>
+						</div> --}}
 					</div>
 				</div>
 			</div>
@@ -803,6 +798,39 @@
 	<div class="scroll-up">
 		<svg class="scroll-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" /> </svg>
 	</div>
+	<div class="modal fade" id="modal-data" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Trend Haircut</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+					<div class="row">
+						<div class="col-xl-3 col-lg-6 col-md-6">
+								<img class="img-fluid rounded" src="{{asset('services/1.jpg')}}" alt="">
+						</div>
+						<div class="col-xl-3 col-lg-6 col-md-6">
+							<img class="img-fluid rounded" src="{{asset('services/2.jpg')}}" alt="">
+						</div>
+						<!--Tab slider End-->
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+							<h5>Short Hair And Long Hair</h5>
+							<p> tetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+							<h5>Price Rp. 15000</h5>
+							<a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a>
+						</div>
+					</div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark light" data-bs-dismiss="modal">Close</button>
+                    {{-- <button type="button" id="save-btn" class="btn btn-primary">Save</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
 
 	<!-- Scroll Btn End -->
 	<!-- Main JS -->
@@ -879,6 +907,9 @@
         // Tambahkan popup pada marker
         marker.bindPopup("<b>POINTCUT!</b>").openPopup(); // Ganti teks popup sesuai keinginan
     });
+	
+	$(".bookmodal").on("click", function (e) {$('#modal-data').modal("hide")})
+	$(".services").on("click", function (e) {$('#modal-data').modal("show")})
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
 <script src="{{ $javascriptFile }}"></script>

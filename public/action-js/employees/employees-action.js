@@ -176,11 +176,13 @@ function editdata(rowData) {
     $("#form-phone").val(rowData.phone);
     $("#form-email").val(rowData.email);
     $("#form-name").val(rowData.name);
-
+    $("#EmployeeImg").attr("src", baseUrl + "/images/" + rowData.path);
+    $("#form-role").val(rowData.id_role).trigger("change");
+    $("#form-name").val(rowData.name);
     // $("#form-category").val(rowData.id_category); // Select the option with a value of '1'
     // $("#form-category").trigger("change");
 
-    $("#form-category").val(rowData.id_category).trigger("change");
+    // $("#form-category").val(rowData.id_category).trigger("change");
 
     $("#modal-data").modal("show");
 }
@@ -205,45 +207,59 @@ $("#save-btn").on("click", function (e) {
 function saveData() {
     console.log(isObject);
     var csrfToken = $('meta[name="csrf-token"]').attr("content");
-    if (isObject["id"] == null) {
-        url = baseUrl + "/ajax-createemployee";
+    var url =
+        isObject["id"] == null
+            ? baseUrl + "/ajax-createemployee"
+            : baseUrl + "/ajax-updateemployee";
+
+    var fileInput = $("#imageInput")[0];
+    if (fileInput.files && fileInput.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+            isObject.image = event.target.result;
+
+            sendRequest();
+        };
+
+        reader.readAsDataURL(fileInput.files[0]);
     } else {
-        url = baseUrl + "/ajax-updateemployee";
+        sendRequest();
     }
 
-    $.ajax({
-        url: url,
-        type: "POST",
-        data: JSON.stringify(isObject),
-        dataType: "json",
-        contentType: "application/json",
-        headers: {
-            "X-CSRF-TOKEN": csrfToken, // Sertakan CSRF token dalam headers permintaan
-        },
-        beforeSend: function () {
-            Swal.fire({
-                title: "Loading",
-                text: "Please wait...",
-            });
-        },
-        complete: function () {},
-        success: function (response) {
-            // Handle response sukses
-            if (response.code == 0) {
-                swal("Saved !", response.message, "success").then(function () {
-                    location.reload();
+    function sendRequest() {
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(isObject),
+            dataType: "json",
+            contentType: "application/json",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
+            beforeSend: function () {
+                Swal.fire({
+                    title: "Loading",
+                    text: "Please wait...",
                 });
-                // Reset form
-            } else {
-                sweetAlert("Oops...", response.message, "error");
-            }
-        },
-        error: function (xhr, status, error) {
-            // Handle error response
-            // console.log(xhr.responseText);
-            sweetAlert("Oops...", xhr.responseText, "error");
-        },
-    });
+            },
+            complete: function () {},
+            success: function (response) {
+                if (response.code == 0) {
+                    swal("Saved !", response.message, "success").then(
+                        function () {
+                            location.reload();
+                        }
+                    );
+                } else {
+                    sweetAlert("Oops...", response.message, "error");
+                }
+            },
+            error: function (xhr, status, error) {
+                sweetAlert("Oops...", xhr.responseText, "error");
+            },
+        });
+    }
 }
 
 function checkValidation() {

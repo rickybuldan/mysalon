@@ -62,13 +62,17 @@ function getTotalTable() {
                 for (var i = 0; i < res.length; i++) {
                     var row = res[i];
                     var html = row.total_records;
-                    $("#form-tot-" + row.table_name).html(html);
+
+                    if (html != null) {
+                        // $("#form-tot-employee").html(0);
+                        // $("#form-tot-booking").html(0);
+                        // $("#form-tot-users").html(0);
+                        // $("#form-tot-revenue").html(0);
+                        $("#form-tot-" + row.table_name).html(html);
+                    } else {
+                        $("#form-tot-" + row.table_name).html(0);
+                    }
                 }
-            } else {
-                $("#form-tot-employee").html(0);
-                $("#form-tot-booking").html(0);
-                $("#form-tot-users").html(0);
-                $("#form-tot-revenue").html(0);
             }
         },
         error: function (xhr, status, error) {

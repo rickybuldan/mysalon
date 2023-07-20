@@ -70,6 +70,21 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label">Photo</label>
+                                <div class="col-sm-9">
+                                    <img src="" id="EmployeeImg" alt="Employee Image" width="100">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label">CHange Photo</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="file" id="imageInput">
+                                </div>
+                            </div>
+
+                           
+                            <div class="mb-3 row">
                                 <label class="col-sm-3 col-form-label">Role</label>
                                 <div class="col-sm-9">
                                     <select id="form-role">
