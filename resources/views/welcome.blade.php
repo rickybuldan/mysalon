@@ -809,10 +809,10 @@
                 <div class="modal-body">
 					<div class="row">
 						<div class="col-xl-3 col-lg-6 col-md-6">
-								<img class="img-fluid rounded" src="{{asset('services/1.jpg')}}" alt="">
+								<img class="img-fluid rounded" src="{{asset('images/services/1.jpg')}}" alt="">
 						</div>
 						<div class="col-xl-3 col-lg-6 col-md-6">
-							<img class="img-fluid rounded" src="{{asset('services/2.jpg')}}" alt="">
+							<img class="img-fluid rounded" src="{{asset('images/services/2.jpg')}}" alt="">
 						</div>
 						<!--Tab slider End-->
 						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">

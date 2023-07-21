@@ -22,7 +22,7 @@ class AdminController extends Controller
     public function services(Request $request){
 
         $javascriptFile = asset('action-js/services/services-action.js');
-        return view('pages.admin.services.services')->with('javascriptFile', $javascriptFile);
+        return view('pages.admin.customers.customers')->with('javascriptFile', $javascriptFile);
 
     }
     public function customers(Request $request){
