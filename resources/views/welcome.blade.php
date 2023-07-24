@@ -89,7 +89,7 @@
 				<div class="header__area-menubar">
 					<div class="header__area-menubar-left">
 						<div class="header__area-menubar-left-logo">
-							<a href="index.html"><h3 class="text-white">POINTCUT</h3></a>
+							<a href="{{route('home')}}"><h3 class="text-white">POINTCUT</h3></a>
 							<div class="responsive-menu"></div>
 						</div>
 					</div>
