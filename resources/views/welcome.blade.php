@@ -104,8 +104,8 @@
 									</ul>
 								</li> --}}
 								<li><a href="#for-booking">Booking</a></li>
-								<li><a href="#for-booking">Services</a></li>
-								<li><a href="#for-visi">Visi Misi</a></li>
+								<li><a href="#for-service">Services</a></li>
+								<li><a href="#for-facility">Facility</a></li>
 								
 								{{-- <li class="menu-item-has-children"><a href="#">Shop</a>
 									<ul class="sub-menu">
@@ -221,14 +221,17 @@
 	</div>
 	<!-- Header Area End -->
 	<!-- Banner Three Area Start -->
-    <div class="banner__three" data-background="{{ asset('template/landing/assets/img/bg/banner-bg-3.jpg') }}">
+    {{-- <div class="banner__three" data-background="{{ asset('template/landing/assets/img/bg/banner-bg-3.jpg') }}"> --}}
+	<div class="banner__three" data-background="{{ asset('images/bg.jpg') }}">
         <div class="container">
             <div class="row">
                 <div class="col-xl-8">
                     <div class="banner__three-title">
                         <span class="subtitle__one">Welcome to Our POINCUT</span>
-                        <h1>Best Haircut Salon in the City</h1>
-                        <p>Phasellus vitae purus ac urna consequat facilisis a vel leo. Maecenas hendrerit lacinia mollis.</p>
+                        <h1>Best Haircut Salon in Bandung</h1>
+                        <p>Each service provided is executed with  precision, and is uniquely crafted for the individual. We believe every client deserves nothing but the best and from the minute you enter , to the second you leave,our focus is on you.
+							If you’re looking to switch up your style or achieve a better version of what you currently have, we are the salon for you.
+							</p>
                         <a href="#for-booking" class="theme-banner-btn">Booking Now<i class="far fa-angle-double-right"></i></a>
                     </div>
                 </div>
@@ -240,65 +243,66 @@
     </div>
 	<!-- Banner Three Area End -->    
 	<!-- Services Three Start -->	
-	<div class="services__three section-padding">
+	<div class="services__three section-padding" id="for-service">
 		<div class="container">
 			<div class="row mb-65">
 				<div class="col-xl-12">
 					<div class="services__three-title">
-						<span class="subtitle__one">Services</span>
+						<span class="subtitle__two">Services</span>
+						<span class="subtitle__one">Our Services</span>
 						<h2>Popular Services</h2>
 					</div>					
 				</div>
 			</div>
             <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-6 xl-mb-30">
+                <div class="col-xl-4 col-lg-4 col-md-6 xl-mb-30">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
-                            <img src="{{asset('template/landing/assets/img/icon/services-1.png')}}" alt="">
+							<img src="{{asset('template/landing/assets/img/icon/9.png')}}" style="
+							width: 60px;
+						" alt="">
                         </div>
                         <div class="services__three-item-content">
-                            <h4><a href="#" class="services">Trend Haircut</a></h4>
+                            <h4><a href="#" onclick="return false;" class="services">Trend Haircut</a></h4>
                             {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
                             {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 md-mb-30">
+                <div class="col-xl-4 col-lg-4 col-md-6 md-mb-30">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
-                            <img src="{{asset('template/landing/assets/img/icon/services-2.png')}}" alt="">
+							<img src="{{asset('template/landing/assets/img/icon/services-3.png')}}" alt="">
                         </div>
                         <div class="services__three-item-content">
-                            <h4><a href="#">Hair Washing</a></h4>
+							<h4><a href="#" onclick="return false;" class="services">Hair Coloring</a></h4>
                             {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
                             {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 md-mb-30">
+                <div class="col-xl-4 col-lg-4 col-md-6 md-mb-30">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
-                            <img src="{{asset('template/landing/assets/img/icon/services-3.png')}}" alt="">
+							<img src="{{asset('template/landing/assets/img/icon/services-1.png')}}" alt="">
                         </div>
                         <div class="services__three-item-content">
-                            <h4><a href="#">Hair Coloring</a></h4>
+							<h4><a href="#" onclick="return false;" class="services">Hairstyles</a></h4>
                             {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
                             {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6">
+                {{-- <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="services__three-item">
                         <div class="services__three-item-icon download">
                             <img src="{{asset('template/landing/assets/img/icon/services-4.png')}}" alt="">
                         </div>
                         <div class="services__three-item-content">
                             <h4><a href="#">Facial hair Trim</a></h4>
-                            {{-- <p>Fusce ornare commodo leo, id maximus ex consequat nec. Cras sed arcu vel eros</p> --}}
-                            {{-- <a href="#" class="simple-btn">Read More<i class="far fa-angle-double-right"></i></a> --}}
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
 		</div>
 	</div>
@@ -380,47 +384,36 @@
     </div> --}}
 	<!-- About Three End -->
 	<!-- Gallery Area Start -->
-	{{-- <div class="gallery__area section-padding">
+	<div class="gallery__area section-padding" id="for-facility">
 		<div class="container">
 			<div class="row mb-65">
 				<div class="col-xl-12">
 					<div class="gallery__area-title">
-						<span class="subtitle__two">Gallery</span>
-						<span class="subtitle__one">Our Gallery</span>
-						<h2>We Have Done Lots Of Projects Let'see Our Gallery</h2>
+						<span class="subtitle__two">Facility</span>
+						<span class="subtitle__one">Our Facility</span>
+						<h2>We Have Lots Facility, Let'see Our Facility</h2>
 					</div>					
 				</div>
 			</div>
-			<div class="row mb-65">
-				<div class="col-xl-3 col-lg-5 mb-30">
+			<div class="row mb-65">	
+					<div class="col-xl-6 col-lg-7 col-md-6 mb-5">
 					<div class="gallery__area-item">
 						<div class="gallery__area-item-image"> 
-							<img class="img__full" src="assets/img/features/gallery-1.jpg" alt="">
+							<img src="{{asset('images/facility/fa1.png')}}" alt="">
 							<div class="gallery__area-item-image-content">
-								<h4>Trending Haircut</h4>
-								<span>Haircut salon</span>
+								<h4>Facility</h4>
+								<span>POINTCUT</span>
 							</div>
 						</div>
 					</div>
 				</div>				
-				<div class="col-xl-6 col-lg-7 lg-mb-30">
+				<div class="col-xl-6 col-md-6 mb-5">
 					<div class="gallery__area-item">
 						<div class="gallery__area-item-image"> 
-							<img src="assets/img/features/gallery-2.jpg" alt="">
+							<img class="img__full" src="{{asset('images/facility/fa2.jpg')}}" alt="">
 							<div class="gallery__area-item-image-content">
-								<h4>Trending Haircut</h4>
-								<span>Haircut salon</span>
-							</div>
-						</div>
-					</div>
-				</div>				
-				<div class="col-xl-3 col-lg-5 xl-mb-30">
-					<div class="gallery__area-item">
-						<div class="gallery__area-item-image"> 
-							<img class="img__full" src="assets/img/features/gallery-3.jpg" alt="">
-							<div class="gallery__area-item-image-content">
-								<h4>Trending Haircut</h4>
-								<span>Haircut salon</span>
+								<h4>Facility</h4>
+								<span>POINTCUT</span>
 							</div>
 						</div>
 					</div>
@@ -428,37 +421,48 @@
 				<div class="col-xl-6 col-lg-7 col-md-6 lg-mb-30">
 					<div class="gallery__area-item">
 						<div class="gallery__area-item-image"> 
-							<img src="assets/img/features/gallery-4.jpg" alt="">
+							<img src="{{asset('images/facility/fa3.jpg')}}" alt="">
 							<div class="gallery__area-item-image-content">
-								<h4>Trending Haircut</h4>
-								<span>Haircut salon</span>
+								<h4>Facility</h4>
+								<span>POINTCUT</span>
 							</div>
 						</div>
 					</div>
 				</div>				
-				<div class="col-xl-6 col-md-6">
+				<div class="col-xl-6 col-md-6 mb-5">
 					<div class="gallery__area-item">
 						<div class="gallery__area-item-image"> 
-							<img class="img__full" src="assets/img/features/gallery-5.jpg" alt="">
+							<img class="img__full" src="{{asset('images/facility/fa4.jpg')}}" alt="">
 							<div class="gallery__area-item-image-content">
-								<h4>Trending Haircut</h4>
-								<span>Haircut salon</span>
+								<h4>Facility</h4>
+								<span>POINTCUT</span>
+							</div>
+						</div>
+					</div>
+				</div>		
+				<div class="col-xl-12 col-md-12">
+					<div class="gallery__area-item">
+						<div class="gallery__area-item-image"> 
+							<img class="img__full" src="{{asset('images/facility/fa5.jpg')}}" alt="">
+							<div class="gallery__area-item-image-content">
+								<h4>Facility</h4>
+								<span>POINTCUT</span>
 							</div>
 						</div>
 					</div>
 				</div>				
 			</div>
-			<div class="row t-center">
+			{{-- <div class="row t-center">
 				<div class="col-xl-12">
 					<a href="about.html" class="theme-banner-btn">Read More<i class="far fa-angle-double-right"></i></a>
 				</div>
-			</div>
+			</div> --}}
 		</div>
-	</div> --}}
+	</div>
 	<!-- Gallery Area End -->
 	{{-- <img class="img__full" src="assets/img/features/bg.jpg" alt=""> --}}
 	<!-- FAQ Area Start -->
-	<div class="faq__area section-padding" id="for-visi" >
+	{{-- <div class="faq__area section-padding" id="for-visi" >
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-xl-5 col-lg-6 lg-mb-30">
@@ -532,63 +536,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> --}}
 	<!-- FAQ Area End -->	
 	<!-- Instagram Area Start -->	
-	{{-- <div class="instagram__area two">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-lg-2 col-sm-4 pl-5 pr-5 lg-mb-10">
-					<div class="instagram__area-item">
-						<img src="assets/img/features/instagram-7.jpg" alt="">
-						<div class="instagram__area-item-icon">
-							<a href="#"><i class="fab fa-instagram"></i></a>
-						</div>
-					</div>					
-				</div>
-				<div class="col-lg-2 col-sm-4 pl-5 pr-5 sm-mb-10">
-					<div class="instagram__area-item">
-						<img src="assets/img/features/instagram-8.jpg" alt="">
-						<div class="instagram__area-item-icon">
-							<a href="#"><i class="fab fa-instagram"></i></a>
-						</div>
-					</div>					
-				</div>
-				<div class="col-lg-2 col-sm-4 pl-5 pr-5 sm-mb-10">
-					<div class="instagram__area-item">
-						<img src="assets/img/features/instagram-9.jpg" alt="">
-						<div class="instagram__area-item-icon">
-							<a href="#"><i class="fab fa-instagram"></i></a>
-						</div>
-					</div>					
-				</div>
-				<div class="col-lg-2 col-sm-4 pl-5 pr-5 sm-mb-10">
-					<div class="instagram__area-item">
-						<img src="assets/img/features/instagram-10.jpg" alt="">
-						<div class="instagram__area-item-icon">
-							<a href="#"><i class="fab fa-instagram"></i></a>
-						</div>
-					</div>					
-				</div>
-				<div class="col-lg-2 col-sm-4 pl-5 pr-5 sm-mb-10">
-					<div class="instagram__area-item">
-						<img src="assets/img/features/instagram-11.jpg" alt="">
-						<div class="instagram__area-item-icon">
-							<a href="#"><i class="fab fa-instagram"></i></a>
-						</div>
-					</div>					
-				</div>
-				<div class="col-lg-2 col-sm-4 pl-5 pr-5">
-					<div class="instagram__area-item">
-						<img src="assets/img/features/instagram-12.jpg" alt="">
-						<div class="instagram__area-item-icon">
-							<a href="#"><i class="fab fa-instagram"></i></a>
-						</div>
-					</div>					
-				</div>
-			</div>
-		</div>
-	</div> --}}
+
 	<!-- Instagram Area End -->	    
 	<!-- Newsletter Area Start -->
     {{-- <div class="newsletter__area">
@@ -626,10 +577,11 @@
                             </div>
                             <div class="contact__area-info-item-content">
 								<span>Emergency Help</span>
-                                <h5><a href="tel:+123(458)896895">+123 ( 458 ) 896 895</a></h5>
+                                {{-- <h5><a href="tel:+123(458)896895">+123 ( 458 ) 896 895</a></h5> --}}
+								<h5><a href="tel:+6225201598">+6225201598</a> Or <a href="tel:+628121447527">08121447527</a></h5>
                             </div>
                         </div>
-                        <div class="contact__area-info-item">
+                        {{-- <div class="contact__area-info-item">
                             <div class="contact__area-info-item-icon">
                                 <i class="fal fa-envelope"></i>
                             </div>
@@ -637,14 +589,14 @@
 								<span>Quick Email</span>
                                 <h5><a href="mailto:support@gamil.com">supportpointcut@gamil.com</a></h5>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="contact__area-info-item">
                             <div class="contact__area-info-item-icon">
                                 <i class="far fa-map-marker-alt"></i>
                             </div>
                             <div class="contact__area-info-item-content">
-								<span>Office Address</span>
-                                <h5><a href="#">66W3+Q4G Buxton, United Kingdom</a></h5>
+								<span>Salon Address</span>
+                                <h5><a href="#">Jl. Srimahi No.17, Ancol, Kec. Regol, Kota Bandung, Jawa Barat 40252</a></h5>
                             </div>
                         </div>
                     </div>
@@ -744,7 +696,7 @@
 									<i class="fal fa-map-marker-alt"></i>
 								</div>
 								<div class="footer__two-widget-contact-item-content">
-									<h6><a href="#">PV3M+X68 Welshpool United Kingdom</a></h6>
+									<h6><a href="#">Jl. Srimahi No.17, Ancol, Kec. Regol, Kota Bandung, Jawa Barat 40252</a></h6>
 								</div>
 							</div>
 							<div class="footer__two-widget-contact-item">
@@ -752,17 +704,17 @@
 									<i class="fal fa-phone-alt"></i>
 								</div>
 								<div class="footer__two-widget-contact-item-content">
-									<h6><a href="tel:+125(895)658568">+125 (895) 658 568</a></h6>
+									<h6><a href="tel:+6225201598">+6225201598</a> Or <a href="tel:+628121447527">08121447527</a></h6>
 								</div>
 							</div>
-							<div class="footer__two-widget-contact-item">
+							{{-- <div class="footer__two-widget-contact-item">
 								<div class="footer__two-widget-contact-item-icon">
 									<i class="fal fa-envelope-open-text"></i>
 								</div>
 								<div class="footer__two-widget-contact-item-content">
 									<h6><a href="mailto:info.help@gmail.com">info.help@gmail.com</a></h6>
 								</div>
-							</div>
+							</div> --}}
 						</div>
 					</div>
 				</div>
@@ -771,10 +723,10 @@
 						<h5>Follow Us</h5>
 						<div class="footer__two-widget-follow">
                             <ul>
-								<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-								<li><a href="#"><i class="fab fa-twitter"></i></a></li>
+								<li><a href="https://www.instagram.com/pointcut/?hl=id" target="_blank" class="text-white"><i class="fab fa-instagram text-white"></i> @pointcut</a></li>
+								{{-- <li><a href="#"><i class="fab fa-twitter"></i></a></li>
 								<li><a href="#"><i class="fab fa-snapchat"></i></a></li>
-								<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+								<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li> --}}
 							</ul>
 						</div>
 					</div>
@@ -807,21 +759,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-					<div class="row">
-						<div class="col-xl-3 col-lg-6 col-md-6">
-								<img class="img-fluid rounded" src="{{asset('images/services/1.jpg')}}" alt="">
-						</div>
-						<div class="col-xl-3 col-lg-6 col-md-6">
-							<img class="img-fluid rounded" src="{{asset('images/services/2.jpg')}}" alt="">
-						</div>
-						<!--Tab slider End-->
-						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-							<h5>Short Hair And Long Hair</h5>
-							<p> tetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-							<h5>Price Rp. 15000</h5>
-							<a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a>
-						</div>
+					<div class="c-service-body">
+					
+					
 					</div>
+
+
+					
                     
                 </div>
                 <div class="modal-footer">
@@ -890,9 +834,9 @@
 <script>
     $(document).ready(function() {
         // Inisialisasi peta
-        latitude=-6.9175;
-        longitude=107.6191;
-        zoomLevel=13;
+        latitude=-6.93536;
+        longitude=107.61394;
+        zoomLevel=15;
         var map = L.map('map').setView([latitude, longitude], zoomLevel); // Ganti latitude, longitude, dan zoomLevel sesuai kebutuhan
     
         // Tambahkan tile layer (misalnya OpenStreetMap)
@@ -909,7 +853,132 @@
     });
 	
 	$(".bookmodal").on("click", function (e) {$('#modal-data').modal("hide")})
-	$(".services").on("click", function (e) {$('#modal-data').modal("show")})
+	$(".services").on("click", function (e) { 
+		ind= $(".services").index(this);
+		el="";
+		if(ind==0){
+			$(".modal-title").html("Trend Haircut")
+			el=`<div class="row mb-4 ">
+							<div class="col-xl-3 col-lg-6 col-md-6">
+									<img class="img-fluid rounded" src="{{asset('images/services/10.jpg')}}" alt="">
+							</div>
+							{{-- <div class="col-xl-3 col-lg-6 col-md-6">
+								<img class="img-fluid rounded" src="{{asset('images/services/10.jpg')}}" alt="">
+							</div> --}}
+							<!--Tab slider End-->
+							<div class="col-xl-9 col-lg-6 col-md-6 col-sm-12 mt-5">
+								<h5>Classic Short Bowl Cut</h5>
+								<p> One of the main distinctive features of a bowl cut is its utter resemblance to a short fringe. As the cut hits your mid-forehead, it remains at the same length around the head. However, the modern bowl cut features such elements as intr i cate undercuts, which take the style to a whole </p>
+								{{-- <h5>Price Rp. 15000</h5> --}}
+								{{-- <a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a> --}}
+							</div>
+						</div>
+						<div class="row mb-4">
+							
+							<div class="col-xl-3 col-lg-6 col-md-6">
+									<img class="img-fluid rounded" src="{{asset('images/services/11.jpg')}}" alt="">
+							</div>
+							<div class="col-xl-9 col-lg-6 col-md-6 col-sm-12 mt-5">
+								<h5>Undercut</h5>
+								<p>At its core, the undercut hairstyle    is simple, stylish and versatile cut that works equally well with a manicured quiff or a man bun. The term itself refers to any cut that leaves length on top while the back and/or sides are closely cropped, faded, or buzzed completely.</p>
+								{{-- <h5>Price Rp. 15000</h5> --}}
+								{{-- <a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a> --}}
+							</div>
+
+							<!--Tab slider End-->
+						</div>
+						<div class="row mb-4">
+							
+							<div class="col-xl-3 col-lg-6 col-md-6">
+									<img class="img-fluid rounded" src="{{asset('images/services/3.jpg')}}" alt="">
+							</div>
+							<div class="col-xl-9 col-lg-6 col-md-6 col-sm-12 mt-5">
+								<h5>Two Block</h5>
+								<p>A two block haircut is a type of haircut where the hair is cut shorter at the sides and at the back while keeping the length longer at the top or the crown of your head. It's called a 'Two Block” haircut as the hair is cut in two different blocks.</p>
+								{{-- <h5>Price Rp. 15000</h5> --}}
+								{{-- <a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a> --}}
+							</div>
+
+							<!--Tab slider End-->
+							
+						</div>
+						<div class="row">
+							
+							<div class="col-xl-3 col-lg-6 col-md-6">
+									<img class="img-fluid rounded" src="{{asset('images/services/4.jpg')}}" alt="">
+							</div>
+							<div class="col-xl-9 col-lg-6 col-md-6 col-sm-12 mt-5">
+								<h5>Slicked Back Hair</h5>
+								<p>Slicked back/down to pull (hair) back and make it look smooth or shiny by using water or some wet substance (such as hair gel) He climbed out of the pool and slicked back his hair. He had long sideburns and dark slicked-back hair.</p>
+								{{-- <h5>Price Rp. 15000</h5> --}}
+								{{-- <a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a> --}}
+							</div>
+
+							<!--Tab slider End-->
+							
+						</div>`
+		}else if(ind==1){
+			$(".modal-title").html("Hair Coloring")
+			el=`<div class="row mb-4 ">
+						<div class="col-xl-3 col-lg-6 col-md-6">
+								<img class="img-fluid rounded" src="{{asset('images/services/6.jpg')}}" alt="">
+						</div>
+						<div class="col-xl-3 col-lg-6 col-md-6">
+							<img class="img-fluid rounded" src="{{asset('images/services/5.jpg')}}" alt="">
+						</div>
+						{{-- <div class="col-xl-3 col-lg-6 col-md-6">
+							<img class="img-fluid rounded" src="{{asset('images/services/10.jpg')}}" alt="">
+						</div> --}}
+						<!--Tab slider End-->
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+							{{-- <h5>Classic Short Bowl Cut</h5> --}}
+							<p> Colouring your hair can emphasize texture and add luster to bring back your hair's shine due to overexposure</p>
+							<p>First, many women notice more shine, body, and fullness, and enhanced manageability when they color their hair. Also, let’s not forget the emotional benefits of hair color. Many psychologists wrote about the importance of hair to our self-esteem – their length, style, and color – and mostly, the very freedom in expressing ourselves. Far from being a choice based on mere frivolity or even necessity, hair color lets us define our identities like nothing else.</p>
+							{{-- <h5>Price Rp. 15000</h5> --}}
+							{{-- <a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a> --}}
+						</div>
+					</div>
+					<div class="row mb-4 ">
+						<div class="col-xl-3 col-lg-6 col-md-6">
+								<img class="img-fluid rounded" src="{{asset('images/services/2.jpg')}}" alt="">
+						</div>
+						<div class="col-xl-3 col-lg-6 col-md-6">
+							<img class="img-fluid rounded" src="{{asset('images/services/7.jpg')}}" alt="">
+						</div>
+						{{-- <div class="col-xl-3 col-lg-6 col-md-6">
+							<img class="img-fluid rounded" src="{{asset('images/services/10.jpg')}}" alt="">
+						</div> --}}
+						<!--Tab slider End-->
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mt-5">
+							{{-- <h5>Classic Short Bowl Cut</h5> --}}
+							<p> Whether you start with your hair color, your clothes or your make-up, adding to or changing the colors that surround you can make a beautiful difference.</p>
+							<p>“Hair color is really important to me because it sets the tone for my whole look.” Kylie Jenner said</p>
+							{{-- <h5>Price Rp. 15000</h5> --}}
+							{{-- <a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a> --}}
+						</div>
+					</div>`
+		}else if(ind==2){
+			$(".modal-title").html("Hairstyles")
+			el=`					<div class="row mb-4 ">
+						<div class="col-xl-4 col-lg-6 col-md-6">
+								<img class="img-fluid rounded" src="{{asset('images/services/9.png')}}" alt="">
+						</div>
+						{{-- <div class="col-xl-3 col-lg-6 col-md-6">
+							<img class="img-fluid rounded" src="{{asset('images/services/10.jpg')}}" alt="">
+						</div> --}}
+						<!--Tab slider End-->
+						<div class="col-xl-8 col-lg-6 col-md-6 col-sm-12 mt-5">
+						
+							<p> Whether your hair is straight or curly, cut in long layers or short pixie, dyed pink or gray, it needs some kind of styling on your part. Not to mention our eternal struggle to curl straight hair and straighten natural curls.</p>
+							{{-- <h5>Price Rp. 15000</h5> --}}
+							{{-- <a href="#for-booking"  class="theme-banner-btn bookmodal">Booking Now<i class="far fa-angle-double-right"></i></a> --}}
+						</div>
+					</div>`
+		}
+		$(".c-service-body").html(el)
+		
+		$('#modal-data').modal("show")
+	})
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
 <script src="{{ $javascriptFile }}"></script>
