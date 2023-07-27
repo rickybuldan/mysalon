@@ -33,6 +33,7 @@
                     <span class="nav-text">Booking</span>
                 </a>
             </li>
+            @if (auth()->check() &&  (auth()->user()->roles->first()->role_name !='Kasir'))
             <li><a href="{{route('tracking')}}" class="">
                 <div class="menu-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,6 +48,7 @@
                 <span class="nav-text">Tracking Booking</span>
             </a>
             </li>
+            @endif
             <li><a href="{{route('listbooking')}}" class="">
                     <div class="menu-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
