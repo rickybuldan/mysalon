@@ -649,12 +649,19 @@ class JsonDataController extends Controller
             $customer->email = $data->email;
             $customer->save();
     
+    
             // Cari data pengguna (user) berdasarkan email
-            $user = User::where('email', $customer->email)->first();
+            $user = User::where('email',$Customer->email)->first();
             if ($user) {
                 $user->name = $data->name;
-                $user->email = $data->email;
+                $user->email =  $customer->email;
                 $user->save();
+            }else{
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => 'User not found.',
+                ];
+                return response()->json($errorResponse, 404);
             }
     
             // Commit transaksi jika semua operasi berhasil
