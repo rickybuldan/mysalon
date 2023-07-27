@@ -1641,6 +1641,9 @@ class JsonDataController extends Controller
             $data = DB::select($query);
 
             // Contoh data yang dikirim sebagai respons JSON
+            if($data[0]->id==""){
+                $data="";
+            }
             $responseData = [
                 'code'=>0,
                 'status' => 'success',
