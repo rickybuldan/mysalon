@@ -71,7 +71,7 @@
                 </a>
             </li>
             @endif
-            @if (auth()->check() && (auth()->user()->roles->first()->role_name !='Pemilik'))
+            @if (auth()->check() && (auth()->user()->roles->first()->role_name !='Pemilik') &&  (auth()->user()->roles->first()->role_name !='Kasir'))
             <li class="menu-title">MASTER</li>
             @endif
             @if (auth()->check() && (auth()->user()->roles->first()->role_name === 'Superadmin') &&  (auth()->user()->roles->first()->role_name !='Pemilik'))
@@ -189,7 +189,7 @@
                 </ul>
             </li>
             @endif
-            @if (auth()->check() &&  (auth()->user()->roles->first()->role_name !='Pemilik'))
+            @if (auth()->check() &&  (auth()->user()->roles->first()->role_name !='Pemilik') &&  (auth()->user()->roles->first()->role_name !='Kasir'))
             <li><a class="has-arrow " href="javascript:void(0);">
                 <div class="menu-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -212,14 +212,14 @@
                 <span class="nav-text">Employee Manager</span>
             </a>
             @endif
-            @if (auth()->check() && (auth()->user()->roles->first()->role_name !='Pemilik'))
+            @if (auth()->check() && (auth()->user()->roles->first()->role_name !='Pemilik') &&  (auth()->user()->roles->first()->role_name !='Kasir'))
             <ul>
                 <li><a href="{{ route('employees') }}">Employee</a></li>
                 <li><a href="{{ route('employeeservices') }}">Employee Services</a></li>
             </ul>
             @endif
         </li>
-            @if (auth()->check() &&  (auth()->user()->roles->first()->role_name !='Pemilik'))
+            @if (auth()->check() &&  (auth()->user()->roles->first()->role_name !='Pemilik') &&  (auth()->user()->roles->first()->role_name !='Kasir'))
             <li><a class="has-arrow " href="javascript:void(0);">
                     <div class="menu-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -245,7 +245,9 @@
                 </ul>
             </li>
             @endif
+            @if (auth()->check() && (auth()->user()->roles->first()->role_name !='Kasir'))
             <li class="menu-title">REPORTS</li>
+           
             <li><a href="{{ route('bookingsreport') }}" class="">
                     <div class="menu-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -262,6 +264,7 @@
                     <span class="nav-text">Daily Booking Report</span>
                 </a>
             </li>
+            @endif
         </ul>
     </div>
 </div>
