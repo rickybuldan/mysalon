@@ -366,7 +366,8 @@ class JsonDataController extends Controller
             $validator = Validator::make((array) $data, [
                 'service_name' => 'required',
                 'price' => 'required',
-                'id_category' => 'required',
+                 // 'id_category' => 'required',
+				 // 'duration' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -380,9 +381,10 @@ class JsonDataController extends Controller
             $service = new Service;
             $service->service_name = $data->service_name;
             $service->price = $data->price;
-            $service->id_category = $data->id_category;
+            $service->id_category = 1;
             $service->desc = $data->desc;
             $service->picture = "";
+		  	//$service->duration = ;
             $service->save();
 
             $responseData = [
@@ -439,7 +441,7 @@ class JsonDataController extends Controller
             $service->service_name = $data->service_name;
             $service->price = $data->price;
             $service->id_category = $data->id_category;
-            $service->duration = $data->duration;
+            //$service->duration = $data->duration;
             $service->desc = $data->desc;
             $service->picture = $data->picture;
             $service->save();
@@ -809,7 +811,7 @@ class JsonDataController extends Controller
                 $filename = Str::random(40) . '.jpg';
 
                 // Simpan gambar di folder 'public/images'
-                $imagePath = public_path('images/') . $filename;
+                $imagePath = 'images/' . $filename;
                 $image->save($imagePath);
             }
 
@@ -893,7 +895,7 @@ class JsonDataController extends Controller
     
             // Delete the existing image if it exists
             if ($Employee && $Employee->path) {
-                $existingImagePath = public_path('images/') . $Employee->path;
+                $existingImagePath = 'images/' . $Employee->path;
                 if (file_exists($existingImagePath)) {
                     unlink($existingImagePath);
                 }
@@ -908,7 +910,7 @@ class JsonDataController extends Controller
                 $filename = Str::random(40) . '.jpg';
 
                 // Simpan gambar di folder 'public/images'
-                $imagePath = public_path('images/') . $filename;
+                $imagePath = 'images/' . $filename;
                 $image->save($imagePath);
             }
             // Cari data pelanggan (customer) berdasarkan ID
@@ -961,7 +963,7 @@ class JsonDataController extends Controller
     
             // Delete the existing image if it exists
             if ($Employee && $Employee->path) {
-                $existingImagePath = public_path('images/') . $Employee->path;
+                $existingImagePath = 'images/' . $Employee->path;
                 if (file_exists($existingImagePath)) {
                     unlink($existingImagePath);
                 }
@@ -1701,16 +1703,10 @@ class JsonDataController extends Controller
                     }
                 ],
                 'booking_products.*.id_product' => 'exists:products,id',
+
                 'booking_products.*.qty' => [
                     'integer',
                     'gt:0',
-                    function ($attribute, $value, $fail) use ($data) {
-                        $productId = $data['booking_products'][$attribute]['id_product'];
-                        $product = Product::find($productId);
-                        if ($product && $product->stock - $value < 0) {
-                            $fail('The product stock is insufficient.');
-                        }
-                    }
                 ],
             ],);
               
@@ -1729,20 +1725,34 @@ class JsonDataController extends Controller
             $bookingDetails = $data['booking_details'];
             $totalPricex = 0;
             $totalPricey = 0;
+			
+			if(!empty($bookingProducts)){
+				
+				foreach ($bookingProducts as $bookingProduct) {
+					$idProduct = $bookingProduct['id_product'];
+					$quantity = $bookingProduct['qty'];
 
-            foreach ($bookingProducts as $bookingProduct) {
-                $idProduct = $bookingProduct['id_product'];
-                $quantity = $bookingProduct['qty'];
-                $price = DB::table('products')
-                ->where('id', $idProduct)
-                ->value('price');
-    
-                $totalPricex += $price * $quantity;
-                BookingProduct::updateOrCreate(
-                    ['id_booking' => $data['id_booking'], 'id_product' => $idProduct],
-                    ['quantity' => $quantity]
-                );
-            }
+					$product = Product::find($idProduct);
+					$stockres = $product->stock - $quantity ;
+
+					if ($stockres < 0) {
+						// Tindakan jika stok habis
+						throw new \Exception("The " . $product->name ."  product is out of stock.");
+					}
+
+
+					$price = DB::table('products')
+					->where('id', $idProduct)
+					->value('price');
+
+					$totalPricex += $price * $quantity;
+					BookingProduct::updateOrCreate(
+						['id_booking' => $data['id_booking'], 'id_product' => $idProduct],
+						['quantity' => $quantity]
+					);
+				}
+			}
+            
 
             foreach ($bookingDetails as $bookingDetail) {
                 $idservice = $bookingDetail['id_service'];
@@ -1750,13 +1760,25 @@ class JsonDataController extends Controller
                 $price = DB::table('services')
                 ->where('id', $idservice)
                 ->value('price');
-                $totalPricey += $price * $quantity;
-                BookingDetail::updateOrCreate(
-                    ['id_booking' => $data['id_booking'], 'id_service' => $idservice],
-                    ['id_employee' => $id_employee, 'is_finish' => 0]
-                );
+                $totalPricey += $price ;
+				$existingBookingDetail = BookingDetail::where('id_booking', $data['id_booking'])
+				->where('id_service', $idservice)
+				->first();
+				 if (!$existingBookingDetail) {
+					// If the record does not exist, create a new one
+					BookingDetail::create([
+						'id_booking' => $data['id_booking'],
+						'id_service' => $idservice,
+						'id_employee' => $id_employee,
+						'is_finish' => 0
+					]);
+				}
+                //BookingDetail::updateOrCreate(
+                    //['id_booking' => $data['id_booking'], 'id_service' => $idservice],
+                    //['id_employee' => $id_employee, 'is_finish' => 0]
+                //);
             }
-            
+             
             $idServices = Arr::pluck($data['booking_details'], 'id_service');
             
             $totalDuration = DB::table('services')
@@ -1773,6 +1795,7 @@ class JsonDataController extends Controller
             $Booking = Booking::findOrFail($data['id_booking']);
             // hitung product
             $Booking->estimate_end = $EstimateDuration;
+			$Booking->status = 0;
             $Booking->total_price = $totalPricex + $totalPricey;
             $Booking->save();
     
@@ -2381,7 +2404,120 @@ class JsonDataController extends Controller
             return response()->json($errorResponse, 500); // Kode status 500 untuk kesalahan server
         }
     }
+	
+	 public function cancelbook(Request $request)
+    {
+        try {
+            // Validasi input
+            $data = json_decode($request->getContent());
+            $userId = Auth::id();
 
+            $validator = Validator::make((array) $data, [
+                'id'=>'required|exists:bookings,id'
+            ]);
+
+            if ($validator->fails()) {
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => $validator->errors()->all(),
+                ];
+                return response()->json($errorResponse, 422); // Kode status 422 untuk validasi gagal
+            }
+            DB::beginTransaction();
+
+    
+            // Batasi dengan Role
+            $user = User::where('id', $userId)->first();
+            if($user->id_role!=10){
+                $errorResponse = [
+                    'status' => 'error',
+                    'message' => "Unauthorized, only"." role Admin "."can do! " ,
+                ];
+                return response()->json($errorResponse, 402); // Kode status 422 untuk validasi gagal
+            }
+
+            $Booking = Booking::findOrFail($data->id);
+            $Booking->status = 2;
+            $Booking->save();
+    
+            // Commit transaksi jika semua operasi berhasil
+            DB::commit();
+            
+            $responseData = [
+                'code' => 0,
+                'status' => 'success',
+                'message' => 'Status updated successfully.',
+                'data' => $data,
+            ];
+
+            return response()->json($responseData);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            $errorResponse = [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+
+            return response()->json($errorResponse, 500);
+        }
+    }
+    public function getTask(Request $request)
+    {
+        try {
+            // Ambil data dari permintaan AJAX (misalnya, parameter POST atau GET)
+            // $data = $request->input('data');
+        
+            
+            $userId = Auth::id();
+            $query = "
+                SELECT
+                bk.*,
+                sc.category_name,
+                em.`name` AS name_employee,
+                TIMESTAMPDIFF(MINUTE, bk.booking_date, bk.estimate_end) AS total_duration,
+                                    bd.id_employee,
+                                    cs.`name` AS name_customer
+            FROM
+                bookings bk
+
+                LEFT JOIN servicecategories sc ON sc.id = bk.id_service_category
+                                    RIGHT JOIN booking_details bd ON bd.id_booking = bk.id
+                                    LEFT JOIN employees em ON em.id = bd.id_employee 
+                                    LEFT JOIN users us ON us.email = em.email
+                                    LEFT JOIN users xs ON xs.id = bk.id_customer
+                LEFT JOIN customers cs ON cs.email = xs.email
+                            
+                            WHERE us.id=        
+            ".$userId;
+        
+            
+            
+            $data = DB::select($query);
+
+            // Contoh data yang dikirim sebagai respons JSON
+            $responseData = [
+                'code'=>0,
+                'status' => 'success',
+                'data' => $data,
+            ];
+
+            // Kembalikan data dalam format JSON
+            return response()->json($responseData);
+
+        } catch (\Exception $e) {
+            // Tangkap pengecualian dan tangani di sini
+            // Misalnya, tampilkan pesan error atau lakukan tindakan yang sesuai
+
+            // Contoh menampilkan pesan error
+            $errorResponse = [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+
+            return response()->json($errorResponse, 500); // Kode status 500 untuk kesalahan server
+        }
+    }
 
 
 }

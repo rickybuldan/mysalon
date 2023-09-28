@@ -11,7 +11,7 @@
                 <div class="card-header mt-2 flex-wrap d-flex justify-content-between">
                     <div>
                         <h4 class="card-title">Employee Services</h4>
-                        <p class="m-0 subtitle">Add <code>Patient</code> class with <code>datatables</code></p>
+         
                     </div>
                     <ul class="nav nav-tabs dzm-tabs" id="myTab-4" role="tablist">
                         <li class="nav-item" role="presentation">

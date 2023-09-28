@@ -194,8 +194,9 @@ function getListData() {
                         $rowData += `<button type="button" class="btn btn-success btn-icon-sm mx-2 add-btn"><i class="bi bi-plus-square"></i></button>`;
                     }
 
-                    // var $rowData = `<button type="button" class="btn btn-primary btn-icon-sm mx-2 edit-btn"><i class="bi bi-pencil-square"></i></button>`;
-                    // $rowData += `<button type="button" class="btn btn-danger btn-icon-sm delete-btn"><i class="bi bi-x-square"></i></button>`;
+    				if (row.status == 0) {
+                        $rowData += `<button type="button" class="btn btn-danger btn-icon-sm mx-2 cancel-btn">x</button>`;
+                    }	
                     return $rowData;
                 },
                 width: "95px",
@@ -208,6 +209,15 @@ function getListData() {
             var api = this.api();
             var rows = api.rows({ page: "current" }).nodes();
             var last = null;
+			
+			 $(rows)
+                .find(".cancel-btn")
+                .on("click", function (e) {
+                    e.preventDefault();
+                    var tr = $(this).closest("tr");
+                    var rowData = dtpr.row(tr).data();
+                    cancelData(rowData);
+                });
 
             $(rows)
                 .find(".edit-btn")
@@ -519,4 +529,66 @@ function payData() {
 
 function loadinvoice(rowData) {
     location.replace(baseUrl + "/invoice?no-booking=" + rowData.no_booking);
+}
+
+function cancelData(data) {
+    console.log(data);
+    var csrfToken = $('meta[name="csrf-token"]').attr("content");
+    swal({
+        title: "Are you sure to cancel booking ?",
+        text: "You will not be able to recover this imaginary file !!",
+        type: "warning",
+        showCancelButton: !0,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, success it !!",
+        cancelButtonText: "No, cancel it !!",
+        closeOnConfirm: !1,
+        closeOnCancel: !1,
+    }).then(function (e) {
+        console.log(e);
+        if (e.value) {
+            $.ajax({
+                url: baseUrl + "/ajax-cancelbook",
+                type: "POST",
+                data: JSON.stringify({ id: data.id }),
+                dataType: "json",
+                contentType: "application/json",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken, // Sertakan CSRF token dalam headers permintaan
+                },
+                beforeSend: function () {
+                    Swal.fire({
+                        title: "Loading",
+                        text: "Please wait...",
+                    });
+                },
+                complete: function () {},
+                success: function (response) {
+                    // Handle response sukses
+                    if (response.code == 0) {
+                        swal(
+                            "Success Cancelled Booking !",
+                            response.message,
+                            "success"
+                        ).then(function () {
+                            location.reload();
+                        });
+                    } else {
+                        sweetAlert("Oops...", response.message, "error");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    // console.log(xhr.responseText);
+                    sweetAlert("Oops...", xhr.responseText, "error");
+                },
+            });
+        } else {
+            swal(
+                "Cancelled !!",
+                "Hey, your imaginary file is safe !!",
+                "error"
+            );
+        }
+    });
 }

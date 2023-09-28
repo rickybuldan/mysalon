@@ -10,15 +10,11 @@ $(document).ready(function () {
 
     $("#form-service").on("change", function () {
         var selectedValue = $(this).val();
-
         loadDate(selectedValue);
     });
 
     $("#min-date").on("change", function () {
         var selectedValue = $(this).val();
-        if ($("#form-item-date").val()) {
-            $("#min-date").attr("disabled", true);
-        }
         loadTime(selectedValue);
     });
 
@@ -35,9 +31,6 @@ $(document).ready(function () {
         if (selectedValue0 && selectedValue1 && selectedValue2) {
             getEmployees();
         }
-        if ($("#form-item-date").val()) {
-            $("#min-date").attr("disabled", true);
-        }
     });
 
     $("#book-btn").on("click", function (e) {
@@ -46,38 +39,31 @@ $(document).ready(function () {
     });
 });
 
-let isObject = {};
-function itemToObj() {
-    var data = {
-        booking_date: $("#form-item-date").val(),
-        booking_details: [],
-    };
-
-    $(".dataitem").each(function () {
-        var service = $(this).find(".itemidservice").val();
-        var employee = $(this).find(".itemidemployee").val();
-
-        var bookingDetail = {
-            id_service: service,
-            id_employee: employee,
-        };
-
-        data.booking_details.push(bookingDetail);
-    });
-
-    isObject = data;
-    console.log(isObject);
-}
-
 function saveData() {
-    itemToObj();
-    console.log(isObject);
+    date = $("#min-date").val();
+    time = $("#form-time").val();
+    var combinedDateTime = date + " " + time;
+    var formattedDateTime = moment(combinedDateTime, "DD/MM/YYYY HH:mm").format(
+        "YYYY-MM-DD HH:mm:ss"
+    );
+    service = $("#form-service").val();
+    employee = $("input:radio[name=radioemployee]:checked").val();
+    var data = {
+        booking_date: formattedDateTime,
+        booking_details: [
+            {
+                id_service: service,
+                id_employee: employee,
+            },
+        ],
+    };
+    console.log(data);
     var csrfToken = $('meta[name="csrf-token"]').attr("content");
 
     $.ajax({
         url: baseUrl + "/ajax-createbookingonline",
         type: "POST",
-        data: JSON.stringify(isObject),
+        data: JSON.stringify(data),
         dataType: "json",
         contentType: "application/json",
         headers: {
@@ -189,7 +175,7 @@ function getFilteredData(selectedValue) {
     });
     return filteredData;
 }
-var dataService = [];
+
 async function loadServices() {
     try {
         const response = await $.ajax({
@@ -204,7 +190,6 @@ async function loadServices() {
             },
         });
         console.log(response);
-        dataService = response.data;
         const res = response.data.map(function (item) {
             return {
                 id: item.id,
@@ -225,179 +210,6 @@ async function loadServices() {
     }
 }
 
-let totalService = 0;
-let totalProduct = 0;
-function countPrice(array, selected) {
-    for (let index = 0; index < array.length; index++) {
-        if (array[index].id == selected) {
-            price = array[index].price;
-        }
-    }
-    return price;
-}
-
-let name_service = "";
-$("#form-service").on("change", function () {
-    var selectedValue = $(this).val();
-    var selectedOption = $(this).find("option:selected");
-    var selectedText = selectedOption.text();
-    name_service = selectedText;
-    loadDate(selectedValue);
-});
-
-var c = 0;
-$("#add-service-btn").on("click", function (e) {
-    e.preventDefault();
-
-    c++;
-    date = $("#min-date").val();
-    time = $("#form-time").val();
-
-    var combinedDateTime = date + " " + time;
-    var formattedDateTime = moment(combinedDateTime, "DD/MM/YYYY HH:mm").format(
-        "YYYY-MM-DD HH:mm:ss"
-    );
-
-    service = $("#form-service").val();
-    employee = $("input:radio[name=radioemployee]:checked").val();
-    let priceService = 9;
-
-    priceService = countPrice(dataService, service);
-    totalService += priceService;
-
-    // console.log(employee);
-    name_employee = $("input:radio[name=radioemployee]:checked").data("id");
-
-    stat = true;
-
-    if (employee == "Booked") {
-        stat = false;
-        sweetAlert(
-            "Oops...",
-            "The selected employee is already booked.",
-            "error"
-        );
-    } else if (employee == undefined) {
-        stat = false;
-        sweetAlert("Oops...", "Choose an employee.", "error");
-    }
-
-    $(".itemidservice").each(function () {
-        var value = $(this).val();
-        if (value == service) {
-            sweetAlert("Oops...", "Service already exists.", "error");
-
-            stat = false;
-        }
-    });
-
-    if (stat) {
-        el =
-            `<tr class="dataitem" id="data` +
-            c +
-            `">
-        <td><input type="text" id="form-item-date" class="form-control form-item" readonly  value="` +
-            formattedDateTime +
-            `"></input>
-        <input type="hidden" class="form-control itemidservice form-item" value="` +
-            service +
-            `"></input>
-        <input type="hidden" class="form-control itemidemployee form-item" value="` +
-            employee +
-            `"></input>
-        </td>
-        <td><input type="text" class="form-control" readonly value="` +
-            name_service +
-            `"></input>
-        </td>
-        <td><input type="text" class="form-control" readonly value="` +
-            name_employee +
-            `"></input>
-        </td>
-        <td><button onclick="removeItem('data` +
-            c +
-            `')" class="btn btn-sm btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
-            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-          </svg></button>
-        </td>
-        </tr>`;
-        $("#item-book").append(el);
-    }
-
-    checkItem();
-    allPrice();
-});
-
-function allPrice() {
-    totalService = 0;
-    totalProduct = 0;
-
-    let qtyArray = [];
-    let productArray = [];
-
-    $(".itemqty").each(function () {
-        let value = $(this).val();
-        qtyArray.push(parseInt(value));
-    });
-
-    $(".itemidproduct").each(function () {
-        let value = $(this).val();
-        let priceProduct = countPrice(dataProduct, value);
-        productArray.push(parseInt(priceProduct));
-    });
-
-    for (let i = 0; i < qtyArray.length; i++) {
-        totalProduct += qtyArray[i] * productArray[i];
-    }
-
-    $(".itemidservice").each(function () {
-        value = $(this).val();
-        priceService = countPrice(dataService, value);
-        totalService += priceService;
-    });
-
-    let total = totalService + totalProduct;
-    // console.log(productArray, "product", qtyArray, "qty");
-
-    $("#total-price").text(total);
-
-    total = totalService + totalProduct * qty;
-    $("#total-price").text(total);
-}
-
-function removeItem(el) {
-    $("#" + el).remove();
-
-    checkItem();
-    allPrice();
-}
-
-function checkItem() {
-    count = $("#item-book > tr").length;
-    count2 = $("#item-product > tr").length;
-    if (count2 > 0) {
-        // loadProducts();
-        $("#no-datapic2").hide();
-        $("#book-btn").show();
-    } else {
-        $("#no-datapic2").show();
-        $("#book-btn").hide();
-    }
-    if (count > 0) {
-        // loadProducts();
-        $("#no-datapic").hide();
-        $("#book-btn").show();
-        $("#min-date").prop("disabled", true);
-        $("#form-time").prop("disabled", true);
-    } else {
-        $("#min-date").prop("disabled", false);
-        $("#form-time").prop("disabled", false);
-        $("#no-datapic").show();
-        $("#book-btn").hide();
-    }
-}
-
 function getEmployees() {
     id = $("#form-service").val();
     date = $("#min-date").val();
@@ -414,9 +226,14 @@ function getEmployees() {
             console.log(response);
             res = response.data;
             var targetElement = $("#list_employee");
+			targetElement.empty();
             var row = "";
             var status = "";
-            res.forEach(function (employee) {
+			if (res.length === 0) {
+				targetElement.html("there are no available employees.");
+				
+			} else {
+				res.forEach(function (employee) {
                 if (employee.status_booked == "Booked") {
                     status = `<div class="text-center"><span class="badge badge-secondary bg-warning mb-2">Booked</span></div>`;
                     id = "Booked";
@@ -454,6 +271,8 @@ function getEmployees() {
                 }
             });
 
+			}
+            
             if (row) {
                 $("#label_employee").show();
                 $("#book-btn").show();

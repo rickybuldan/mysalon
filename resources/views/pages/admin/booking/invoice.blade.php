@@ -12,7 +12,12 @@
             <div class="card-header">Booking Invoice<strong>
                 {{$data[0]->created_at}}
             </strong> <span class="float-end">
-                    <strong>Status:</strong> {{$data[0]->status_text}} </span> </div>
+                    <strong>Status:</strong> {{$data[0]->status_text}} </span>
+					@if ($data[0]->is_paid==1)
+                    <span class="float-end badge-success text-white">
+                    <strong>Status Paid / Paid Off</strong></span> 
+                    @endif
+			</div>
             <div class="card-body">
                 <div class="row mb-5">
                     <div class="mt-4 px-5 col-xl-3 col-lg-3 col-md-6 col-sm-12">
@@ -46,10 +51,11 @@
                                         </svg> --}}
                                         <img style="width: 230px;" src="{{ asset('template/admin/images/logoapps.png') }}" >
                                 </div>
-                                <span>Address: <strong class="d-block">Jl. Diponegoro No 3</strong>
-                                    <strong>Coblong, Bandung</strong></span><br>
-                                <small class="text-muted">Telp. 021-00002</small><br>
-                                <small class="text-muted">Email. poincut@example.com</small>
+								
+                                <span>Address: <strong class="d-block">Jl. Srimahi No.17</strong>
+                                    <strong>Ancol, Kec. Regol, Kota Bandung, Jawa Barat 40252</strong></span><br>
+                                <small class="text-muted">Telp. +6225201598 Or 08121447527</small><br>
+                                <small class="text-muted">IG  @pointcut</small>
                             </div>
                             <div class="col-sm-3 mt-3"> <img src="images/qr.png" alt="" class="img-fluid width110"> </div>
                         </div>

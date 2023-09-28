@@ -20,7 +20,7 @@ async function loadRole() {
 
         const res = response.data
             .filter(function (item) {
-                return item.role_code !== 10 && item.role_code !== 50;
+                return item.role_code == 30;
             })
             .map(function (item) {
                 return {
@@ -196,6 +196,7 @@ $("#add-btn").on("click", function (e) {
     $("#form-role").val("").trigger("change");
     $("#form-name").val("");
     $("#form-email").val("");
+	$("#EmployeeImg").attr("src", null);
     $("#modal-data").modal("show");
 });
 

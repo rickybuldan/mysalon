@@ -184,7 +184,7 @@ function checkValidation() {
     if (
         validationSwalFailed(
             (isObject["price"] = $("#form-price").val()),
-            "Email field cannot be empty."
+            "Price field cannot be empty."
         )
     )
         return false;

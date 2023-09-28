@@ -134,5 +134,11 @@ class AdminController extends Controller
         return view('pages.admin.booking.bookingbysearch')->with([  'javascriptFile' => $javascriptFile, 'id' => $id]);
     }
 
+	    public function  task(Request $request){
+
+        $javascriptFile = asset('action-js/bookings/task-action.js');
+        return view('pages.admin.booking.task')->with('javascriptFile', $javascriptFile);
+
+    }
 
 }

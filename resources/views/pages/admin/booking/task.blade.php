@@ -5,8 +5,8 @@
             <div class="card">
                 <div class="card-header mt-2 flex-wrap d-flex justify-content-between">
                     <div>
-                        <h4 class="card-title">List Booking</h4>
-          
+                        <h4 class="card-title">List Task</h4>
+                       
                     </div>
                     {{-- <ul class="nav nav-tabs dzm-tabs" id="myTab-4" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -29,7 +29,7 @@
                                     <th>Payment Status</th>
                                     {{-- <th>Discount</th>
                                     <th>Total Price</th> --}}
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>

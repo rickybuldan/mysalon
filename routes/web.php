@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/employeeservices', [AdminController::class, 'employeeservices'])->name('employeeservices');
         Route::get('/booking', [AdminController::class, 'booking'])->name('booking');
         Route::get('/products', [AdminController::class, 'products'])->name('products');
+		Route::get('/task', [AdminController::class, 'task'])->name('task');
         
 
         //dashboard
@@ -57,8 +58,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ajax-gettotaltable', [JsonDataController::class, 'gettotaltable'])->name('gettotaltable');
         Route::get('/ajax-getrecentbookings', [JsonDataController::class, 'getrecentbookings'])->name('getrecentbookings');
 
-     
-
         // List Booking
         Route::get('/ajax-listbookings', [JsonDataController::class, 'getlistbookings'])->name('getlistbookings');
         Route::get('/ajax-getbookingtracking', [JsonDataController::class, 'getbookingtracking'])->name('getbookingtracking');
@@ -66,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/ajax-getdetbookingproduct', [JsonDataController::class, 'getdetbookingproduct'])->name('getdetbookingproduct');
         Route::post('/ajax-updatepaidbooking', [JsonDataController::class, 'updatepaidbooking'])->name('updatepaidbooking');
         Route::post('/ajax-updatebookingproductservice', [JsonDataController::class, 'updatebookingproductservice'])->name('updatebookingproductservice');
+		Route::post('/ajax-cancelbook', [JsonDataController::class, 'cancelbook'])->name('cancelbook');
+		Route::get('/ajax-getTask', [JsonDataController::class, 'getTask'])->name('getTask');
 
          // Employees
         Route::get('/ajax-listemployees', [JsonDataController::class, 'getlistemployees'])->name('getlistemployees');

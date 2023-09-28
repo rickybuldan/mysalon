@@ -60,7 +60,7 @@ function getListData() {
                 text: "Export Excel",
                 className: "btn btn-success btn-xxs",
                 filename: "Service-Report-" + now,
-                title: "Daily Service Bookings Report",
+                title: "Laporan Harian Service Pointcut",
                 customize: function (xlsx) {
                     var sheet = xlsx.xl.worksheets["sheet1.xml"];
                     var headerRow = $("row", sheet).eq(0);
@@ -86,8 +86,33 @@ function getListData() {
                 text: "Export PDF",
                 className: "btn btn-danger btn-xxs",
                 filename: "Service-Report-" + now,
-                title: "Daily Service Bookings Report",
+                title: "Laporan Harian Service Pointcut",
                 customize: function (doc) {
+                    // Tambahkan header di sini
+                    var now = new Date().toISOString().slice(0, 10);
+                    var header = {
+                        columns: [
+                            {
+                                image: imagebase64, // Ganti dengan path gambar Anda
+                                width: 90,
+                                height: 48, // Lebar gambar
+                                alignment: "left", // Tambahkan alignment left
+                                valign: "middle",
+                            },
+                            {
+                                text: "POINTCUT SALON\nMAKE UP AND HAIR STUDIO",
+                                style: "headerStyle",
+                                fontSize: 18,
+                                alignment: "center", // Posisi teks di tengah secara horizontal
+                                valign: "middle", // Mengatur rata tengah secara vertikal pada teks
+                                // margin: [10, 0, 0, 0],
+                            },
+                        ],
+                        columnGap: 10, // Jarak antara gambar dan teks
+                        // margin: [10, 10], // Jarak atas header
+                    };
+                    doc.content.unshift(header);
+
                     // Setiap halaman
                     for (var i = 0; i < doc.content.length; i++) {
                         var table = doc.content[i];
@@ -109,6 +134,24 @@ function getListData() {
                             }
                         }
                     }
+
+                    var footer = {
+                        columns: [
+                            {
+                                text:
+                                    "\n\n\n\nBandung," +
+                                    now +
+                                    ", " +
+                                    "\nPenanggung Jawab\n\n\n\n\nKasir", // Ganti dengan nama kasir yang sesuai
+                                style: "footerStyle",
+                                alignment: "right", // Posisi teks di pojok kanan bawah
+                                margin: [50, 0, 0, 0],
+                            },
+                        ],
+                        columnGap: 10, // Jarak antara teks
+                        margin: [0, 0, 0, 0], // Jarak atas dan kanan footer
+                    };
+                    doc.content.push(footer);
                 },
             },
         ],
@@ -388,3 +431,32 @@ function exportExcel() {
     $.fn.dataTable.Buttons.defaults.exportOptions.modifier.page =
         originalExportAction;
 }
+
+var imageUrl = baseUrl + "/template/admin/images/logoapps.png";
+
+// Fungsi untuk mengambil gambar dan mengonversi ke base64
+function getBase64Image(imageUrl, callback) {
+    var img = new Image();
+    img.crossOrigin = "Anonymous"; // Mengatasi masalah kebijakan cross-origin
+    img.onload = function () {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        var dataURL = canvas.toDataURL("image/jpeg"); // Anda bisa mengganti "image/jpeg" dengan format yang sesuai
+
+        callback(dataURL);
+    };
+    img.src = imageUrl;
+}
+
+// Panggil fungsi untuk mengambil gambar dan menyimpan dalam variabel imagebase64
+var imagebase64;
+getBase64Image(imageUrl, function (base64) {
+    imagebase64 = base64;
+    console.log(imagebase64); // Tampilkan dalam konsol untuk pemeriksaan
+    // Lakukan apa pun yang Anda inginkan dengan data base64 ini
+});

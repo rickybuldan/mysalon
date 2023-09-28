@@ -128,7 +128,7 @@
 			<div class="card-header flex-wrap">
 				<div>
 					<h4 class="card-title">Booking Services</h4>
-					<p class="m-0 subtitle">Default datatables. Add <code>datatables</code> class in root</p>
+		
 				</div>
 			</div>
 			<div class="card-body ">
@@ -255,7 +255,7 @@
 			<div class="card-header flex-wrap">
 				<div>
 					<h4 class="card-title">Booking Details</h4>
-					<p class="m-0 subtitle">Default datatables. Add <code>datatables</code> class in root</p>
+					
 				</div>
 			</div>
 			<div class="card-body ">

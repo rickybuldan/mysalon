@@ -34,10 +34,10 @@
                             <div class="col-xl-12">
                                 <div class="auth-form">
 									<div class="text-center mb-3">
-										<a href="index.html"><img src="{{asset('template/admin/images/logoapps.png')}}" alt=""></a>
+										<a href="{{route('home')}}"><img src="{{asset('template/admin/images/logoapps.png')}}" alt=""></a>
 									</div>
                                     <h4 class="text-center mb-4">Sign up your account</h4>
-                                    <form action="index.html">
+                                    <form>
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Name</strong></label>
                                             <input type="text" id="form-name" class="form-control" placeholder="Name">

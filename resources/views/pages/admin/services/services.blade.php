@@ -6,7 +6,7 @@
                 <div class="card-header mt-2 flex-wrap d-flex justify-content-between">
                     <div>
                         <h4 class="card-title">Services</h4>
-                        <p class="m-0 subtitle">Add <code>Patient</code> class with <code>datatables</code></p>
+ 
                     </div>
                     <ul class="nav nav-tabs dzm-tabs" id="myTab-4" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -26,7 +26,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Service Name</th>
-                                    <th>Category Name</th>
+                                  
                                     <th>Estimate Duration</th>
                                     <th>Price</th>
                                     <th>Action</th>
@@ -57,14 +57,14 @@
                                     <input id="form-name" type="text" class="form-control" placeholder="Name">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
+                             {{-- <div class="mb-3 row">
                                 <label class="col-sm-3 col-form-label">Service Category</label>
                                 <div class="col-sm-9">
                                     <select id="form-category">
 
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="mb-3 row">
                                 <label class="col-sm-3 col-form-label">Description</label>
                                 <div class="col-sm-9">

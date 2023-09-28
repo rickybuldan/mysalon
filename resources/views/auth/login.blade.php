@@ -34,7 +34,7 @@
                             <div class="col-xl-12">
                                 <div class="auth-form">
 									<div class="text-center mb-3">
-										<a href="index.html"><img src="{{asset('template/admin/images/logoapps.png')}}" alt=""></a>
+										<a href="{{route('home')}}"><img src="{{asset('template/admin/images/logoapps.png')}}" alt=""></a>
 									</div>
                                     <h4 class="text-center mb-4">Sign in your account</h4>
 									<form action="{{ route('login') }}" method="POST" class=" dz-form pb-3">
@@ -49,6 +49,7 @@
 										</div>
 										<div class="form-group mb-3">
 											<input type="password"  name="password" id="password" class="form-control" placeholder="your password">
+																																			
 										</div>
 										@if ($errors->has('email'))
 											<div class="form-group mb-3">

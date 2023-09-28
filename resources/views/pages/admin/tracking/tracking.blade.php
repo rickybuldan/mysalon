@@ -61,7 +61,7 @@
                 <div class="card-header mt-2 flex-wrap d-flex justify-content-between">
                     <div>
                         <h4 class="card-title">List of Upcoming Bookings</h4>
-                        <p class="m-0 subtitle">Add <code>Patient</code> class with <code>datatables</code></p>
+                
                     </div>
                     {{-- <ul class="nav nav-tabs dzm-tabs" id="myTab-4" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -116,12 +116,12 @@
                                     <input id="form-no-booking" type="text" class="form-control" placeholder="Email">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-sm-3 col-form-label">Diskon</label>
-                                <div class="col-sm-9">
-                                    <input id="form-discount" type="number" class="form-control" placeholder="Phone">
-                                </div>
-                            </div>
+                             <!-- <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label">Diskon</label>
+                    <div class="col-sm-9">
+                        <input id="form-discount" type="number" class="form-control" placeholder="Phone">
+                    </div>
+                </div> -->
                             <div class="mb-3 row">
                                 <label class="col-sm-3 col-form-label">Total Price</label>
                                 <div class="col-sm-9">
